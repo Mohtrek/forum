@@ -3567,7 +3567,7 @@ h3.catbg .main_icons::before, h3.catbg .icon {
 	grid-column: 3;
 	grid-row: 1;
 }
-#c1::before, #c2::before {
+#c1::before, #c2::before, #c3::before, #c4::before, #c5::before {
 	content: "";
 	display: inline-block;
 	vertical-align: middle;
@@ -3586,6 +3586,27 @@ h3.catbg .main_icons::before, h3.catbg .icon {
 	height: 30px;
 	background-image: url('/assets/ui/deltarune.png');
 }
+#c3::before {
+	width: 32px;
+	height: 30px;
+	background-image: url('/assets/ui/utheart.png');
+}
+#c4::before {
+	width: 32px;
+	height: 30px;
+	background-image: url('/shop_items/items/dog.png');
+}
+#c5::before {
+	width: 20px;
+	height: 20px;
+	background-image: url('/shop_items/items/exclamation.png');
+}
+#c7::before {
+	width: 20px;
+	height: 19px;
+	background-image: url('/shop_items/items/utsave.png');
+}
+
 .cat_bar + .windowbg, .cat_bar + .roundframe {
 	margin-top: -1px;
 	border-top-left-radius: 0;
