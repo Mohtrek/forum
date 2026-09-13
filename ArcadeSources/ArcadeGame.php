@@ -1320,7 +1320,7 @@ function ArcadeHighscore($selfScorelist = 'highscore')
 	$result = $smcFunc['db_query']('', '
 		SELECT
 			sc.id_score, sc.score, sc.end_time AS time, sc.duration, sc.comment, sc.id_member,
-			sc.position, sc.score_status, IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.id_group, 0) AS id_group
+			sc.position, sc.score_status, IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.id_group, 0) AS id_group,
 			IFNULL(mem.real_name, sc.player_name) AS real_name
 		FROM  {db_prefix}arcade_scores AS sc
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = sc.id_member)
