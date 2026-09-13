@@ -1436,16 +1436,18 @@ ul li.greeting {
 
 /* The quick buttons */
 .quickbuttons {
-	margin: 0 0 5px;
-	clear: right;
-	float: right;
-	text-align: right;
+	display: flex;
 }
 #recent .quickbuttons {
 	margin: 0;
 }
 .quickbuttons > li {
-	float: left;
+	border-left: 1px var(--txt-color-off) solid;
+	border-top: 1px var(--txt-color-off) solid;
+	border-right: 1px var(--ter-bg-color) solid;
+	border-bottom: 1px var(--ter-bg-color) solid;
+	background-color: var(--sec-bg-color);
+	margin: 2px;
 }
 .quickbuttons > li > a, .inline_mod_check {
 	display: block;
@@ -1456,6 +1458,9 @@ ul li.greeting {
 .quickbuttons > li:only-child > a, .inline_mod_check:only-child {
 	margin: 2px;
 	height: 23px;
+}
+.postinfo .quickbuttons li a {
+	color: var(--txt-color);
 }
 .inline_mod_check input {
 	position: relative;
@@ -3463,8 +3468,16 @@ img.avatar {
 .messageicon img, #iconList img {
 	vertical-align: middle;
 }
+.keyinfo {
+	border-right: 1px var(--ter-bg-color) solid;
+	border-top: 1px var(--ter-bg-color) solid;
+	border-left: 1px var(--border-color) solid;
+	border-bottom: 1px var(--border-color) solid;
+	padding-left: 5px;
+	padding-right: 5px;
+}
 .keyinfo .postinfo {
-	padding: 1px 0 5px 0;
+	padding: 1px 0 1px 0;
 	line-height: 1.5em;
 	font-size: 0.9em;
 	font-weight: bold;
@@ -3489,6 +3502,9 @@ img.avatar {
 	font-weight: normal;
 	font-style: italic;
 	padding: 2px 4px 0 4px;
+}
+.keyinfo .postinfo .smalltext, .keyinfo .postinfo .smalltext strong {
+	color: var(--txt-color);
 }
 /* PMs postinfo */
 #personal_messages .keyinfo .postinfo {
@@ -3516,8 +3532,6 @@ img.avatar {
 .inner {
 	padding: 7px 8px 2px 2px;
 	margin: 0;
-	border-top: 1px solid #bfbfbf;
-	box-shadow: 0 1px 0 #fff inset;
 	min-height: 85px;
 	word-wrap: break-word; /* IE fallback */
 	overflow-wrap: break-word;
