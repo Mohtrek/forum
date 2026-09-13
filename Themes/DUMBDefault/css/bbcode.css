@@ -165,9 +165,10 @@ color: inherit !important;
 	bottom: 0;
 	display: block;
 	font-weight: bold;
+	left: 0;
 	position: absolute;
 	text-align: center;
-	width: calc(100% - 10px);
+	width: 100%;
 }
 
 /* Textbox styles */
