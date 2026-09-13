@@ -896,11 +896,12 @@ function template_single_post($message)
 
 	echo '
 						</div><!-- .moderatorbar -->
-						<ol class="actionbar">';
+					</div><!-- .post_wrapper -->
+					<ol class="actionbar">';
 	// Show the website and email address buttons.
 	if (!$message['member']['is_guest'] && $message['member']['show_profile_buttons'])
 	{
-		echo '<li><a href="', $scripturl, '?action=profile;area=showposts;u=', $message['member']['id'], '" title="', $txt['showPosts'], '"><img src="/assets/ui/posts.png" alt="Posts"></a></li>';
+		echo '<li><a href="', $scripturl, '?action=profile;area=showposts;u=', $message['member']['id'], '" title="', $txt['posts'], '"><img src="/assets/ui/posts.png" alt="Posts"></a></li>';
 		echo '<li><a href="', $scripturl, '?action=shop;sa=inventory;u=', $message['member']['id'], '" title="', $txt['Shop_main_inventory'], '"><img src="/assets/ui/inventory.png" alt="Inventory"></a></li>';
 
 		// Don't show an icon if they haven't specified a website.
@@ -911,9 +912,8 @@ function template_single_post($message)
 		if ($context['can_send_pm'])
 			echo '<li><a href="', $scripturl, '?action=pm;sa=send;u=', $message['member']['id'], '" title="', $message['member']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline'], '"><img src="/assets/ui/pm.png" alt="Private Message"></a></li>';
 	}
-						
-						echo '</ol>
-					</div><!-- .post_wrapper -->
+	echo '
+					</ol>
 				</div><!-- $message[css_class] -->
 				<hr class="post_separator">';
 }

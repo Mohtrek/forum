@@ -2962,6 +2962,10 @@ tr.windowbg:hover {
 /* Special treatment for #forumposts area */
 #forumposts .windowbg, #forumposts .approvebg, #forumposts .approvebg2, #pmFolder .windowbg {
 	overflow: visible;
+	padding: 0;
+}
+.post_wrapper {
+	padding: 12px 16px;
 }
 /* Nobody wants locked topics to stand out much. */
 .windowbg.locked {
@@ -3439,10 +3443,13 @@ img.avatar {
 	margin: 0 0 0 175px;
 }
 .actionbar {
+	background-color: var(--ter-bg-color);
+	border-top: 1px solid var(--border-color);
 	display: flex;
 	filter: var(--ut-icon-filter);
 	gap: 5px;
 	justify-content: flex-end;
+	padding: 6px;
 }
 .postarea div.flow_hidden {
 	width: 100%;
