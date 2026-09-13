@@ -4330,4 +4330,17 @@ img.theme_thumbnail {
 	font-style: italic;
 	color: var(--txt-color-off)
 }
+.dumb_badge {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	max-height: 90px;
+	max-width: 152px;
+	overflow-y: auto;
+}
 
+.dumb_badge img {
+	align-self: center;
+	flex: 0 0 auto;
+	padding: 1px;
+}
