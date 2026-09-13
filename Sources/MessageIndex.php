@@ -354,7 +354,7 @@ function MessageIndex()
 			COALESCE(meml.real_name, ml.poster_name) AS last_display_name, t.id_first_msg,
 			mf.poster_time AS first_poster_time, mf.subject AS first_subject, mf.icon AS first_icon,
 			mf.poster_name AS first_member_name, mf.id_member AS first_id_member,
-            mf.id_group AS first_member_group, ml.id_group AS last_member_group,
+            IFNULL(memf.id_group, 0) AS first_member_group, IFNULL(meml.id_group, 0) AS last_member_group,
 			COALESCE(memf.real_name, mf.poster_name) AS first_display_name, ' . (!empty($modSettings['preview_characters']) ? '
 			SUBSTRING(ml.body, 1, ' . ($modSettings['preview_characters'] + 256) . ') AS last_body,
 			SUBSTRING(mf.body, 1, ' . ($modSettings['preview_characters'] + 256) . ') AS first_body,' : '') . 'ml.smileys_enabled AS last_smileys, mf.smileys_enabled AS first_smileys
