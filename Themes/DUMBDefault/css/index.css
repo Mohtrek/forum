@@ -2524,8 +2524,7 @@ dl.stats {
 	padding: 4px 1px;
 }
 dl.addrules dt.floatleft {
-	width: 15em;
-	color: #333;
+	color: var(--txt-color);
 	padding: 0 15px 6px 15px;
 }
 #addrule fieldset {
