@@ -92,6 +92,7 @@ function template_html_above()
 	loadCSSFile('fonts.css', ['minimize' => true]);
 	loadCSSFile('bbcode.css', ['minimize' => true]);
 	loadCSSFile('banner.css', ['minimize' => true]);
+	loadCSSFile('tags.css', ['minimize' => true]);
 	loadCSSFile('randChar.css', ['minimize' => true]);
 
 	// Show right to left, the language code, and the character set for ease of translating.
