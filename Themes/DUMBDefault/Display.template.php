@@ -686,12 +686,7 @@ function template_single_post($message)
 	// Show the quickbuttons, for various operations on posts.
 	template_quickbuttons($message['quickbuttons'], 'post');
 
-	if (!empty($modSettings['show_modify']) && !empty($message['modified']['name']))
-		echo
-										$message['modified']['last_edit_text'];
-
 	echo '
-									</span>
 								</div>
 								<div id="msg_', $message['id'], '_quick_mod"', $ignoring ? ' style="display:none;"' : '', '></div>
 							</div><!-- .keyinfo -->';
@@ -807,6 +802,12 @@ function template_single_post($message)
 	// Show "<< Last Edit: Time by Person >>" if this post was edited. But we need the div even if it wasn't modified!
 	// Because we insert into it through AJAX and we don't want to stop themers moving it around if they so wish so they can put it where they want it.
 	echo '<span class="smalltext modified floatright', !empty($modSettings['show_modify']) && !empty($message['modified']['name']) ? ' mvisible' : '', '" id="modified_', $message['id'], '">';
+
+	if (!empty($modSettings['show_modify']) && !empty($message['modified']['name']))
+		echo
+										$message['modified']['last_edit_text'];
+
+	echo '</span>';
 
 	// What about likes?
 	if (!empty($modSettings['enable_likes']))
