@@ -1965,7 +1965,7 @@ function PlushSearch2()
 				first_mem.id_member AS first_member_id, COALESCE(first_mem.real_name, first_m.poster_name) AS first_member_name,
 				last_m.id_msg AS last_msg, last_m.poster_time AS last_poster_time, last_mem.id_member AS last_member_id,
 				COALESCE(last_mem.real_name, last_m.poster_name) AS last_member_name, last_m.icon AS last_icon, last_m.subject AS last_subject,
-                last_mem.id_group AS last_mem_group, first_mem.id_group AS first_mem_group,
+                last_mem.id_group AS last_member_group, first_mem.id_group AS first_member_group,
 				t.id_topic, t.is_sticky, t.locked, t.id_poll, t.num_replies, t.num_views,
 				b.id_board, b.name AS board_name, c.id_cat, c.name AS cat_name
 			FROM {db_prefix}messages AS m
