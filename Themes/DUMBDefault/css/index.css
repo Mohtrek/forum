@@ -20,6 +20,8 @@
 	--info-color: #FFFF3C;
 	--valid-color: #25FA67;
 	--invalid-color: #FF3C3C;
+
+	--ut-icon-filter: hue-rotate(180deg);
 }
 body {
 	background: black;
@@ -266,6 +268,40 @@ a.new_posts:visited {
 .info_block {
 	border-left: 1px solid var(--border-color);
 	border-top: 1px solid var(--border-color);
+}
+
+.message_index_title, .info_block div .floatright {
+	grid-row: 1;
+}
+
+.info_block div .floatleft {
+	grid-column: 3;
+	grid-row: 2;
+	text-align: right;
+}
+
+.message_index_title {
+	grid-row: 1;
+	grid-column: 1;
+	justify-self: start;
+}
+
+.message_index_title .new_posts {
+	width: fit-content;
+}
+
+.info_block div .icons {
+	grid-row: 1;
+	grid-column: 3;
+	display: block;
+	text-align: right;
+}
+
+.info_block div small {
+	grid-row: 2;
+	grid-column: 1;
+	font-style: normal;
+	color: var(--txt-color-off)
 }
 
 /* Common classes to easy styling.
@@ -3221,6 +3257,12 @@ img.avatar {
 .postarea, .moderatorbar {
 	margin: 0 0 0 175px;
 }
+.actionbar {
+	display: flex;
+	filter: var(--ut-icon-filter);
+	gap: 5px;
+	justify-content: flex-end;
+}
 .postarea div.flow_hidden {
 	width: 100%;
 }
@@ -3678,6 +3720,8 @@ p.information img {
 }
 .topic_pages {
 	font-size: 0.75em;
+	grid-column: 2;
+	grid-row: 1;
 	margin: 0 0 0 5px;
 }
 .topic_pages::before {
