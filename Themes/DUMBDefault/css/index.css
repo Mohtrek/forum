@@ -3797,7 +3797,7 @@ h3.catbg .main_icons::before, h3.catbg .icon {
 	grid-column: 3;
 	grid-row: 1;
 }
-#c1::before, #c2::before, #c3::before, #c4::before, #c5::before {
+#c1::before, #c2::before, #c3::before, #c4::before, #c5::before, #c7::before {
 	content: "";
 	display: inline-block;
 	vertical-align: middle;
@@ -3829,7 +3829,7 @@ h3.catbg .main_icons::before, h3.catbg .icon {
 #c5::before {
 	width: 20px;
 	height: 20px;
-	background-image: url('/shop_items/items/exclamation.png');
+	background-image: url('/assets/ui/exclamation.png');
 }
 #c7::before {
 	width: 20px;
