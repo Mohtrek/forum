@@ -186,7 +186,7 @@ function ArcadeStats_BestPlayers($count = 10, $rom = 0)
 			FROM {db_prefix}arcade_games AS game
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = game.id_champion)
 			WHERE game.id_champion_score > 0' . $where . '
-			GROUP BY game.id_champion, id_member, real_name, game.rom_flag
+			GROUP BY game.id_champion, id_member, real_name, game.rom_flag, mem.id_group
 			ORDER BY champions DESC
 			LIMIT {int:count}',
 			array(
@@ -240,7 +240,7 @@ function ArcadeStats_MostActive($count = 10, $time = -1, $rom = 0)
 			SELECT COUNT(*) AS scores, IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, {string:empty}) AS real_name, IFNULL(mem.id_group, 0) AS id_group
 			FROM {db_prefix}arcade_scores AS score
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = score.id_member)
-			GROUP BY score.id_member, mem.id_member, mem.real_name
+			GROUP BY score.id_member, mem.id_member, mem.real_name, mem.id_group
 			ORDER BY scores DESC
 			LIMIT {int:count}',
 			array(
@@ -316,7 +316,7 @@ function ArcadeStats_LongestChampions($count = 10, $time = - 1, $where = '', $ro
 
 	if (empty($arcadeLongChamps)) {
 		$request = $smcFunc['db_query']('', '
-            SELECT game.id_game, game.game_name, game.thumbnail, game.cover_icon, game.game_directory, game.rom_flag, score.champion_to, score.champion_from,
+			SELECT game.id_game, game.game_name, game.thumbnail, game.cover_icon, game.game_directory, game.rom_flag, score.champion_to, score.champion_from,
 			MAX(TIMEDIFF(score.champion_to, score.champion_from)) AS durationx,
 				CASE
 					WHEN cast(score.champion_from as signed) > 0 AND cast(score.champion_to as signed) = 0
@@ -325,13 +325,13 @@ function ArcadeStats_LongestChampions($count = 10, $time = - 1, $where = '', $ro
 						THEN cast(score.champion_to as signed) - cast(score.champion_from as signed)
 					ELSE 0
 				END AS champion_duration,
-				IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, {string:empty}) AS real_name, CASE WHEN score.champion_to = 0 THEN 1 ELSE 0 END AS current
-                IFNULL(mem.id_group, 0) AS id_group
+				IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, {string:empty}) AS real_name, CASE WHEN score.champion_to = 0 THEN 1 ELSE 0 END AS current,
+				IFNULL(mem.id_group, 0) AS id_group
 			FROM {db_prefix}arcade_scores AS score
 				RIGHT JOIN {db_prefix}arcade_games AS game ON (game.id_game = score.id_game)
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = score.id_member)
 			WHERE ' . $where . $whereRom . '
-			GROUP BY score.id_score, game.id_game, game.game_name, game.thumbnail, game.cover_icon, game.game_directory, score.champion_from, score.champion_to, mem.id_member, mem.real_name, champion_duration, current, game.rom_flag
+			GROUP BY score.id_score, game.id_game, game.game_name, game.thumbnail, game.cover_icon, game.game_directory, score.champion_from, score.champion_to, mem.id_member, mem.real_name, champion_duration, current, game.rom_flag, mem.id_group
 			ORDER BY ' . $order . '
 			LIMIT {int:count}',
 			array(
