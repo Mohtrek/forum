@@ -3206,6 +3206,9 @@ div#pollmoderation {
 	font-weight: normal;
 	padding: 2px 0;
 }
+#forumposts .windowbg {
+	margin-top: 0;
+}
 /* poster and postarea + moderation area underneath */
 .post_wrapper::after {
 	content: "";
