@@ -137,7 +137,7 @@ function template_html_above()
 	template_javascript();
 
 	echo '
-	<title>', (isset($context['is_index']) ? $txt['forum_name_html_safe'] : $context['page_title_html_safe'] . ' - ' . $context['forum_name_html_safe']), '</title>
+	<title>', (isset($context['is_index']) ? $context['forum_name_html_safe'] : $context['page_title_html_safe'] . ' - ' . $context['forum_name_html_safe']), '</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">';
 
 	// Content related meta tags, like description, keywords, Open Graph stuff, etc...
