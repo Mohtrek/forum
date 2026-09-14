@@ -1252,7 +1252,7 @@ ul li.greeting {
 	padding-bottom: 3px;
 	line-height: 1.1em;
 }
-.navigate_section ul li a, .navigate_section ul li em {
+.navigate_section ul li a:not(.tag), .navigate_section ul li em {
 	color: color-mix(var(--txt-color-off), var(--txt-color));
 	padding: 4px 0 4px;
 	margin-top: -4px;
