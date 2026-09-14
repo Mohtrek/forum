@@ -4275,6 +4275,10 @@ img.theme_thumbnail {
 .avatar, .blurb, .icons, .pronouns {
 	text-align: center;
 }
+.icons {
+	font-family: "Determination Mono";
+	font-size: 1.5em;
+}
 .blurb {
 	font-style: italic;
 	color: var(--txt-color-off)
