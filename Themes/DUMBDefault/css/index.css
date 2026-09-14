@@ -3362,7 +3362,9 @@ img.avatar {
 	padding: 0.5em;
 }
 .postarea, .moderatorbar {
+	border-left: 2px groove var(--border-color);
 	margin: 0 0 0 175px;
+	padding-left: 0.5em;
 }
 .actionbar {
 	background-color: var(--ter-bg-color);

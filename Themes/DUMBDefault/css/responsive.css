@@ -275,14 +275,13 @@
 		width: auto;
 		position: relative;
 	}
-	.postarea {
+	.postarea, .moderatorbar {
+		border-left: 0;
 		margin: 0;
+		padding-left: 0;
 	}
 	.inner {
 		padding: 1em 2px;
-	}
-	.moderatorbar {
-		margin: 0;
 	}
 	.keyinfo {
 		padding-top: 5px;
