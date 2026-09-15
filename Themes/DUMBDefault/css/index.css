@@ -737,6 +737,7 @@ img.sort, .sort {
 }
 
 ul.dropmenu li {
+	border: 1px solid transparent;
 	padding: .3em 0;
 }
 
@@ -798,6 +799,9 @@ ul.dropmenu li:has(a:focus) {
 	box-shadow: none;
 	text-shadow: none;
 	background: color-mix(var(--sec-color), var(--pri-bg-color));
+}
+
+.dropmenu > li > a:focus {
 	font-style: oblique;
 }
 
