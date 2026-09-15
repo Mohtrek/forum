@@ -1,4 +1,4 @@
-span[class^="group-"], a[class^="group-"], a[class^="group-"]:visited {
+span[class*="group-"], a[class*="group-"], a[class*="group-"]:visited {
 	font-weight: bold;
 }
 
