@@ -1276,14 +1276,13 @@ ul li.greeting {
 }
 
 .navigate_section ul li a:first-child::before {
-	background-image: url('/Smileys/dumb/heart.png');
+	background-image: url('/assets/ui/utheart.png');
 	background-size: cover;
 	content: "";
 	display: inline-block;
-	height: 16px;
+	height: 10px;
 	margin-right: 0.5em;
-	vertical-align: middle;
-	width: 16px;
+	width: 10px;
 }
 
 /* The content section */
