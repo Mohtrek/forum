@@ -1281,7 +1281,7 @@ ul li.greeting {
 	content: "";
 	display: inline-block;
 	height: 10px;
-	image-rendering: smooth;
+	image-rendering: auto;
 	margin-right: 0.5em;
 	width: 10px;
 }
