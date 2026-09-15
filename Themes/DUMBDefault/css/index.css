@@ -2334,10 +2334,11 @@ dl {
 }
 .activity_stats li span {
 	display: block;
-	border: 1px solid #666;
+	border: 1px solid var(--border-color);
 	border-left: none;
 	border-right: none;
-	background: #eee;
+	background: var(--ter-bg-color);
+	white-space: nowrap;
 }
 .activity_stats li.last span {
 	border-right: none;
