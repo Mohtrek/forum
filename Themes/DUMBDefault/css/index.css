@@ -2158,6 +2158,9 @@ tr.windowbg td, tr.bg td, .table_grid tr td {
 	padding: 7px 10px 7px 10px;
 	margin: 6px 0;
 }
+.noticebox a, .infobox a, .descbox a {
+	text-decoration: underline;
+}
 
 /* Styles for stats bars and progress bars.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
