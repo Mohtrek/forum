@@ -1736,17 +1736,6 @@ tr.windowbg td, tr.bg td, .table_grid tr td {
 	background: url(../images/icons/bell.png);
 	background-size: 16px;
 }
-/* Load better icons for higher resolution screens */
-@media
-	screen and (-webkit-min-device-pixel-ratio: 1.66),
-	screen and (min-resolution: 160dpi) {
-	.main_icons::before {
-		background-image: url(../images/icons/main_icons_sprite_hd.png);
-	}
-	.main_icons.alerts::before {
-		background-image: url(../images/icons/bell_hd.png);
-	}
-}
 
 /* Small fix for topics */
 .quickbuttons .main_icons::before, .button .main_icons::before {
