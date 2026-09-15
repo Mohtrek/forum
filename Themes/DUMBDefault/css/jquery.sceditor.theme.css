@@ -58,6 +58,9 @@ div.sceditor-dropdown a:link {
 .sceditor-dropdown a:hover {
 	background-color: var(--ter-bg-color);
 }
+div.sceditor-dropdown label {
+	color: var(--txt-color);
+}
 
 @media screen and (min-width: 720px) {
 	.sceditor-container {
