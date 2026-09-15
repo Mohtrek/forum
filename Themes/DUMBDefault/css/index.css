@@ -3017,7 +3017,7 @@ h3 .collapse {
 }
 .lastpost {
 	font-size: 0.9em;
-	padding-top: 3px;
+	padding: 0 10px;
 }
 .board_icon, .info, .board_stats, .lastpost {
 	display: inline-block;
@@ -3032,7 +3032,7 @@ h3 .collapse {
 	overflow: hidden;
 	margin: 0 0 3px 0;
 	display: grid;
-	grid-template-columns: auto 50% 10% 25%;
+	grid-template-columns: auto 55% 10% 25%;
 	flex-wrap: wrap;
 }
 /* Child boards */
