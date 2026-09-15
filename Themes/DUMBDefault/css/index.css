@@ -1272,11 +1272,12 @@ ul li.greeting {
 }
 
 .navigate_section ul li a:first-child::before {
-	background-image: url('/assets/ui/utheart.png');
+	background-image: url('/Smileys/dumb/heart.png');
 	background-size: cover;
 	content: "";
 	display: inline-block;
 	height: 10px;
+	image-rendering: smooth;
 	margin-right: 0.5em;
 	width: 10px;
 }
