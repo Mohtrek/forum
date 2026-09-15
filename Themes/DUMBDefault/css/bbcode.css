@@ -194,3 +194,8 @@ color: inherit !important;
 	padding: 28px 24px 28px 24px;
 	width: 70%;
 }
+
+/* Smooth image rendering for large images */
+.smooth, .smooth * {
+	image-rendering: auto;
+}
