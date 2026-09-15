@@ -26,7 +26,7 @@ function template_login()
 			</div>
 			<div class="roundframe">
 				<form class="login" action="', $context['login_url'], '" name="frmLogin" id="frmLogin" method="post" accept-charset="', $context['character_set'], '">
-					<div class="information">If you were registered on the old version of this forum, please register again! Your old username will not work on the new forum (unless you register with the same username)!</div>';
+					<div class="noticebox">If you were registered on the old version of this forum, please <a href="', $scripturl, '?action=signup">register again</a>! Accounts have not been transferred from the old forum, so you will have to create a new account here.</div>';
 
 	// Did they make a mistake last time?
 	if (!empty($context['login_errors']))
