@@ -32,13 +32,14 @@ $txt['Shop_welcome_text'] = '
 <p><strong>Hee hee... Welcome, %1$s.</strong></p>
 <p><img src="/assets/ui/seam.gif" alt="Seam"></p>
 <div id="random-shop-quote">
-    <p data-weight="3">The name\'s Seam. Pronounced <i>Shawm.</i><br>And this is my little <i>Seap</i>. Ha ha ha ha...</p>
-    <p data-weight="5">Take your time... Ain\'t like it\'s better spent.</p>
-    <p>There are many fresh faces in town, I see.<br>It warms this old fluff to see such hope.</p>
-    <p>Eh? That little salesman...?<br>... I don\'t know what you\'re talking about.</p>
-    <p>As long as I stay in my shop, these walls won\'t change.</p>
-    <p>You\'re a Lightner. Don\'t take your life, well, lightly!</p>
-    <p>Me? I\'m here offering the same old junk.</p>
+	<p data-weight="3">The name\'s Seam. Pronounced <i>Shawm.</i><br>And this is my little <i>Seap</i>. Ha ha ha ha...</p>
+	<p data-weight="5">Take your time... Ain\'t like it\'s better spent.</p>
+	<p>There are many fresh faces in town, I see.<br>It warms this old fluff to see such hope.</p>
+	<p>Eh? That little salesman...?<br>... I don\'t know what you\'re talking about.</p>
+	<p>As long as I stay in my shop, these walls won\'t change.</p>
+	<p>You\'re a Lightner. Don\'t take your life, well, lightly!</p>
+	<p>Me? I\'m here offering the same old junk.</p>
+	<p>In a way, I suppose it\'s just a little bit amusing to see you again.</p>
 </div>
 <p>(Confused? Read the <a href="/index.php?action=pages;sa=view;id=5">shop guide</a>!)</p>';
 $txt['Shop_money_pocket'] = 'Pocket';
