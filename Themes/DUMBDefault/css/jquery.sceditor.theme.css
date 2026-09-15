@@ -31,7 +31,9 @@ div.sceditor-group {
 .sceditor-button:hover,
 .sceditor-button:active,
 .sceditor-button.active {
+	background-color: var(--ter-color);
 	border-radius: 0;
+	box-shadow: none;
 }
 .sceditor-button:active {
 	background: var(--sec-color);
