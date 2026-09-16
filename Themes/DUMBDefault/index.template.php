@@ -482,7 +482,7 @@ function template_body_below()
 		<ul>
 			<li id='randomQuote'></li>
 			<li class='copyright'>", theme_copyright(), "</li>
-			<li class='floatright'><a href='$scripturl?action=pages;sa=view;id=4'>User help</a> | <a href='$scripturl?action=pm;sa=send;u=1,2'>Contact mods</a> | <a href='$scripturl?action=agreement'>Terms of use</a> | <a href='#top_section'>Back to top ▲</a></li>
+			<li class='floatright'><a href='$scripturl?action=pages;sa=view;id=4'>User help</a> | <a href='$scripturl?action=pm;sa=send;g=1,2'>Contact mods</a> | <a href='$scripturl?action=agreement'>Terms of use</a> | <a href='#top_section'>Back to top ▲</a></li>
 		</ul>";
 
 	// Show the load time?
