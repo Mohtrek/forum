@@ -744,6 +744,12 @@ ul.dropmenu li {
 	padding: .3em 0;
 }
 
+ul.dropmenu li,
+ul.dropmenu li li,
+.button {
+	border: 1px solid transparent;
+}
+
 ul.dropmenu li:hover,
 ul.dropmenu li li:hover,
 .button:hover {
