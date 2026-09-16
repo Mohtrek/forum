@@ -41,7 +41,38 @@ $txt['Shop_welcome_text'] = '
 	<p>Me? I\'m here offering the same old junk.</p>
 	<p>In a way, I suppose it\'s just a little bit amusing to see you again.</p>
 </div>
-<p>(Confused? Read the <a href="/index.php?action=pages;sa=view;id=5">shop guide</a>!)</p>';
+<p>(Confused? Read the <a href="/index.php?action=pages;sa=view;id=5">shop guide</a>!)</p>
+<table class="shop-items-table">
+	<thead>
+		<tr>
+			<th>Category Name</th>
+			<th>Category Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><a href="/index.php?action=shop;sa=buy;cat=2">BADGES</a></td>
+			<td>BADGES to equip.</td>
+		</tr>
+		<tr>
+			<td><a href="/index.php?action=shop;sa=buy;cat=3">TITLES</a></td>
+			<td>TITLES to attain.</td>
+		</tr>
+		<tr>
+			<td><a href="/index.php?action=shop;sa=buy;cat=4">VARIOUS</a></td>
+			<td>VARIOUS items.</td>
+		</tr>
+		<tr>
+			<td><a href="/index.php?action=shop;sa=buy;cat=5">[CASINO]</a></td>
+			<td>Try your LUCK!</td>
+		</tr>
+		<tr>
+			<td><a href="/index.php?action=shop;sa=tradelist">TRADING</a></td>
+			<td>TRADE your items.</td>
+		</tr>
+	</tbody>
+</table>
+';
 $txt['Shop_money_pocket'] = 'Pocket';
 $txt['Shop_money_bank'] = 'Bank';
 $txt['Shop_user_avatar'] = 'Avatar';
