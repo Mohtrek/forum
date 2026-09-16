@@ -66,8 +66,7 @@ function RemindPick()
 	}
 	elseif (isset($_POST['user']) && $_POST['user'] != '')
 	{
-		$where = 'real_name = {string:real_name} OR member_name = {string:member_name} OR email_address = {string:email_address}';
-		$where_params['member_name'] = $_POST['user'];
+		$where = 'real_name = {string:real_name} OR email_address = {string:email_address}';
 		$where_params['real_name'] = $_POST['user'];
 		$where_params['email_address'] = $_POST['user'];
 	}
