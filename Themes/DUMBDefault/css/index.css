@@ -3972,6 +3972,8 @@ h3.profile_hd::before,
 }
 .main_icons.profile_sm::before {
 	background: url(../images/icons/profile_sm.png) no-repeat;
+	height: 12px;
+	width: 11px;
 }
 .xx {
 	background: url(../images/post/xx.png) 2px no-repeat;
