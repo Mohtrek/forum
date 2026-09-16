@@ -30,7 +30,7 @@ body {
 	background: black;
 	background-image: url('/Themes/DUMBDefault/images/background.png');
 	background-attachment: fixed;
-	background-repeat: no-repeat;
+	background-repeat: repeat-x;
 	background-size: cover;
 	background-position-x: -50px;
 	font: 83.33%/150% Verdana, Tahoma, Arial, sans-serif;
