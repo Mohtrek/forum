@@ -3386,6 +3386,10 @@ img.avatar {
 .messageicon img, #iconList img {
 	vertical-align: middle;
 }
+.messageicon:hover > div, #iconList, #iconList > span:hover {
+	background-color: var(--ter-bg-color) !important;
+	border-color: var(--border-color) !important;
+}
 .postinfo .messageicon {
 	margin: 0 0.6em 0.2em 0;
 }
