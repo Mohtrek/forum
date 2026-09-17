@@ -504,7 +504,7 @@ censorText($row['first_subject']);
 				'last_post' => array(
 					'id' => $row['id_last_msg'],
 					'member' => array(
-						'username' => $row['last_member_name'],
+						'username' => $row['last_display_name'],
 						'name' => $row['last_display_name'],
 						'id' => $row['last_id_member'],
 						'href' => !empty($row['last_id_member']) ? $scripturl . '?action=profile;u=' . $row['last_id_member'] : '',
