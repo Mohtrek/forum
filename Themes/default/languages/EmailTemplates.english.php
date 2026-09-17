@@ -175,7 +175,7 @@ Should you have any problems with the activation, please visit {ACTIVATIONLINKWI
 	@description:
 */
 $txt['admin_register_activate_subject'] = 'Welcome to {FORUMNAME}';
-$txt['admin_register_activate_body'] = 'Thank you for registering at {FORUMNAME}. Your username is {USERNAME} and your password is {PASSWORD}.
+$txt['admin_register_activate_body'] = 'Thank you for registering at {FORUMNAME}. Your username is {REALNAME} and your password is {PASSWORD}.
 
 Before you can log in, you must first activate your account by selecting the following link:
 
