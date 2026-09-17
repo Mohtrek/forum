@@ -24,7 +24,7 @@ require_once(dirname(__FILE__) . '/Settings_private.php');
  * @var int 0, 1, 2
  * @global int $maintenance
  */
-$maintenance = 1;
+$maintenance = 0;
 /**
  * Title for the Maintenance Mode message.
  *
