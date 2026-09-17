@@ -46,7 +46,7 @@ $mmessage = 'DUMB is transferring to the public site! Please check back soon.';
  *
  * @var string
  */
-$boardurl = $dumb_is_dev ? 'http://localhost:4000' : 'https://dumb.kocka.tech';
+$boardurl = $dumb_is_dev ? 'http://localhost:4000' : 'https://deltaruneboards.net';
 /**
  * Email address to send emails from. (like noreply@yourdomain.com.)
  *
