@@ -75,10 +75,12 @@ function template_main()
 				', function_exists('template_bi_' . $board['type'] . '_stats') ? call_user_func('template_bi_' . $board['type'] . '_stats', $board) : template_bi_board_stats($board), '
 			</div>';
 
-			if($context["user"]["ignoreusers_hide_posts"] && in_array($board['last_post']['member']['id'], $context["user"]["ignoreusers"]))
-				$hide_last_post = true;
-			if($context["user"]["ignoreusers_hide_topics"] && in_array($board['last_post']['id_member_started'], $context["user"]["ignoreusers"]))
-				$hide_last_post = true;
+			if (isset($context["user"]) && isset($board['last_post'])) {
+				if ($context["user"]["ignoreusers_hide_posts"] && in_array($board['last_post']['member']['id'], $context["user"]["ignoreusers"]))
+					$hide_last_post = true;
+				if ($context["user"]["ignoreusers_hide_topics"] && in_array($board['last_post']['id_member_started'], $context["user"]["ignoreusers"]))
+					$hide_last_post = true;
+			}
 
 			// Show the last post if there is one.
 			if(!$hide_last_post)
