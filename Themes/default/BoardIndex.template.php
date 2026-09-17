@@ -108,10 +108,12 @@ function template_main()
 					</div>';
 
 			// Show the last post if there is one.
-			if($context["user"]["ignoreusers_hide_posts"] && in_array($board['last_post']['member']['id'], $context["user"]["ignoreusers"]))
-				$hide_last_post = true;
-			if($context["user"]["ignoreusers_hide_topics"] && in_array($board['last_post']['id_member_started'], $context["user"]["ignoreusers"]))
-				$hide_last_post = true;
+			if (isset($context['user']) && isset($board['last_post'])) {
+				if ($context["user"]["ignoreusers_hide_posts"] && in_array($board['last_post']['member']['id'], $context["user"]["ignoreusers"]))
+					$hide_last_post = true;
+				if ($context["user"]["ignoreusers_hide_topics"] && in_array($board['last_post']['id_member_started'], $context["user"]["ignoreusers"]))
+					$hide_last_post = true;
+			}
 
 			if(!$hide_last_post)
 			{
