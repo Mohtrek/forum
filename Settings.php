@@ -24,21 +24,21 @@ require_once(dirname(__FILE__) . '/Settings_private.php');
  * @var int 0, 1, 2
  * @global int $maintenance
  */
-$maintenance = 0;
+$maintenance = 1;
 /**
  * Title for the Maintenance Mode message.
  *
  * @var string
  * @global int $mtitle
  */
-$mtitle = 'Maintenance Mode';
+$mtitle = 'Maintenance mode';
 /**
  * Description of why the forum is in maintenance mode.
  *
  * @var string
  * @global string $mmessage
  */
-$mmessage = 'Okay faithful users...we\'re attempting to restore an older backup of the database...news will be posted once we\'re back!';
+$mmessage = 'DUMB is transferring to the public site! Please check back soon.';
 
 ########## Forum Info ##########
 /**
