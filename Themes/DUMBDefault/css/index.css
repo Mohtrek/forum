@@ -3634,6 +3634,7 @@ ul.post_options li {
 }
 .custom_fields_above_signature {
 	border-bottom: 1px solid var(--txt-color);
+	padding-bottom: 2em;
 }
 .signature,
 #current_signature_display,
