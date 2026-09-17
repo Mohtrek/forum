@@ -18,7 +18,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /home/public/smf
+            cd /home/public
             git pull
-            find /home/public/smf -type d -not -path "*/.git/*" -exec chmod 777 {} \;
-            find /home/public/smf -type f -not -path "*/.git/*" -exec chmod 666 {} \;
+            find /home/public -type d -not -path "*/.git/*" -exec chmod 777 {} \;
+            find /home/public -type f -not -path "*/.git/*" -exec chmod 666 {} \;
