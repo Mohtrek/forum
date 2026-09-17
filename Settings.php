@@ -88,6 +88,18 @@ $db_type = 'mysql';
  */
 $db_port = 0;
 /**
+ * The database name
+ *
+ * @var string
+ */
+$db_name = 'deltaruneboards';
+/**
+ * Database username
+ *
+ * @var string
+ */
+$db_user = 'dumb';
+/**
  * Database user for when connecting with SSI
  *
  * @var string

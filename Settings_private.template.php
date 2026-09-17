@@ -22,20 +22,6 @@ $auth_secret = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 $db_server = 'localhost';
 
 /**
- * The database name
- *
- * @var string
- */
-$db_name = 'deltaruneboards';
-
-/**
- * Database username
- *
- * @var string
- */
-$db_user = 'dumb';
-
-/**
  * Database password
  *
  * @var string
