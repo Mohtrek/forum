@@ -35,16 +35,16 @@ function template_options()
 			],
 			'default' => 'Beheeyemite.png',
 		],
-		// [
-		// 	'id' => 'color_scheme',
-		// 	'label' => 'Color scheme',
-		// 	'options' => [
-		// 		'dark' => 'Dark',
-		// 		'light' => 'Light (Beta)',
-		// 		'os' => 'System default',
-		// 	],
-		// 	'default' => 'dark',
-		// ],
+		[
+			'id' => 'color_scheme',
+			'label' => 'Color scheme',
+			'options' => [
+				'dark' => 'Dark',
+				'light' => 'Light (Beta)',
+				'os' => 'System default',
+			],
+			'default' => 'dark',
+		],
 		$txt['theme_opt_display'],
 		array(
 			'id' => 'show_children',
