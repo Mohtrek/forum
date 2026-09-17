@@ -3074,7 +3074,7 @@ h3 .collapse {
 	overflow: hidden;
 	margin: 0 0 3px 0;
 	display: grid;
-	grid-template-columns: auto 55% 10% 25%;
+	grid-template-columns: auto 50% 10% 35%;
 	flex-wrap: wrap;
 }
 /* Child boards */
