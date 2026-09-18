@@ -1,6 +1,6 @@
 [b]Below is a legally binding document describing your rights an obligations when interacting with this forum. If you'd like to know what kind of content is acceptable by community standards, please refer to forum rules.[/b]
 
-This document, last revised on September 14, 2026, defines a contract (further referred to as "Agreement") between us, the administrators of the Deltarune Unofficial Message Boards (further referred to as "Site"), and you, the user of the Site. By continuing to use the Site, with our without an account, you accept this Agreement and confirm that you are of legal age or have parental consent to comply with the Agreement's terms.
+This document, last revised on September 18, 2026, defines a contract (further referred to as "Agreement") between us, the administrators of the Deltarune Unofficial Message Boards (further referred to as "Site"), and you, the user of the Site. By continuing to use the Site, with or without an account, you accept this Agreement and confirm that you are of legal age or have parental consent to comply with the Agreement's terms.
 
 We may make changes to the Site, this Agreement, as well as the Privacy Policy, at any time, but will try to give you reasonable notice of any major changes.
 
@@ -11,7 +11,7 @@ We may make changes to the Site, this Agreement, as well as the Privacy Policy, 
 [*] The Site provides content on an "as is" basis, without warranty of any kind, express or implied. You may not take the content on the Site as medical, legal, financial or other kind of professional advice. The content of the Site expresses the views of its author, and not necessarily the views of this forum or its staff.
 [*] You may not use the Site to:
 [list]
-  [*] Engage in, or encourage, fradulent, criminal, or otherwise illegal activity under applicable law
+  [*] Engage in, or encourage, fraudulent, criminal, or otherwise illegal activity under applicable law
   [*] Impersonate, defame, abuse, harass, stalk, intimidate, or submit libel of, any person
   [*] Solicit personal information from users under the age of 18
   [*] Publish or distribute pornographic, obscene, hateful or discriminatory content
