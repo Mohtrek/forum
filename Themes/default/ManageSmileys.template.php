@@ -225,7 +225,7 @@ function template_addsmiley()
 						<strong><label for="preview">', $txt['smiley_preview'], '</label>: </strong>
 					</dt>
 					<dd>
-						<img src="', $modSettings['smileys_url'], '/', $modSettings['smiley_sets_default'], '/', $context['filenames'][$context['selected_set']]['smiley']['id'], '" id="preview" alt="">
+						<img src="', $modSettings['smileys_url'], '/', $modSettings['smiley_sets_default'], '/', $context['current_smiley']['filename'], '" id="preview" alt="">
 					</dd>
 					<dt>
 						<strong><label for="smiley_filename">', $txt['smileys_filename'], '</label>: </strong>

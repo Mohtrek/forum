@@ -882,7 +882,7 @@ function AddSmiley()
 		redirectexit('action=admin;area=smileys;sa=editsmileys');
 	}
 
-	$context['selected_set'] = $modSettings['smiley_sets_default'];
+	$context['selected_set'] = $context['smiley_sets'][0]['path'];
 
 	// Get all possible filenames for the smileys.
 	$context['filenames'] = array();
@@ -911,11 +911,12 @@ function AddSmiley()
 		ksort($context['filenames']);
 	}
 
+	$current_set_filenames = $context['filenames'][$context['selected_set']];
 	// Create a new smiley from scratch.
 	$context['current_smiley'] = array(
 		'id' => 0,
 		'code' => '',
-		'filename' => $context['filenames'][$smcFunc['htmlspecialchars']($context['selected_set'])]['smiley']['id'],
+		'filename' => $current_set_filenames[array_keys($current_set_filenames)[0]]['id'],
 		'description' => $txt['smileys_default_description'],
 		'location' => 0,
 		'is_new' => true,
