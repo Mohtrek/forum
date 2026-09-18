@@ -264,6 +264,29 @@
 	#topic_container .moderation .main_icons {
 		display: none;
 	}
+	/* Recent activity module */
+	#topic_container .topic_grid.windowbg_recent {
+		grid-template-columns: 12% auto;
+	}
+	#topic_container .windowbg_recent .board_icon {
+		align-items: center;
+		align-self: stretch;
+		display: flex;
+		grid-column: 1;
+		grid-row: 1 / span 2;
+		justify-content: center;
+	}
+	#topic_container .windowbg_recent .info_block {
+		border: 0;
+		display: block;
+		grid-row: 1;
+	}
+	#topic_container .windowbg_recent .lastpost {
+		grid-column: 2;
+		grid-row: 2;
+		padding-left: 0;
+	}
+	/* Topic grid styles */
 	#topic_container .topic_grid {
 		display: grid;
 		grid-template-columns: 1fr max-content;
