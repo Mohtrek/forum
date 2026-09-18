@@ -1141,6 +1141,9 @@ html[lang="el-GR"] .inline_mod_check {
 
 /* The framing graphics */
 /* The top bar. */
+#top_section {
+	z-index: 1;
+}
 #top_section::after {
 	content: "";
 	display: block;
@@ -1183,9 +1186,6 @@ html[lang="el-GR"] .inline_mod_check {
 #header {
 	display: flex;
 	justify-content: center;
-}
-#top {
-  margin-bottom: -5px;
 }
 /* The main title. */
 h1.forumtitle {
