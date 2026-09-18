@@ -61,7 +61,7 @@ function topic_descriptions_post_end(): void
 				'attributes' => array(
 					'size' => 80,
 					'maxlength' => min(!empty($modSettings['topic_descriptions_maxlen']) ? (int) $modSettings['topic_descriptions_maxlen'] : 25, 140),
-					'value' => $context['description'],
+					'value' => htmlspecialchars($context['description']),
 				),
 			),
 		);

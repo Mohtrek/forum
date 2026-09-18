@@ -41,7 +41,7 @@ function template_main()
 
 	if ($context['can_see_description'])
 		echo '
-			<p>', $context['topicinfo']['description'], '</p>';
+			<p>', htmlspecialchars($context['topicinfo']['description']), '</p>';
 
 	echo '
 			<p>', $txt['started_by'], ' ', $context['topic_poster_name'], ', ', $context['topic_started_time'], '</p>';

@@ -214,7 +214,7 @@ function template_main()
 			if (!empty($modSettings['topic_descriptions_enable']) && !empty($topic['description']))
 			{
 				$topicDescriptionWhere = empty($modSettings['topic_descriptions_where']) ? 'below' : 'right';
-				$topicDescription = '<small id="topicdesc_' . $topic['first_post']['id'] . '" class="em"> &nbsp;(' . $topic['description'] . ')</small>';
+				$topicDescription = '<small id="topicdesc_' . $topic['first_post']['id'] . '" class="em">' . htmlspecialchars($topic['description']) . '</small>';
 			}
 			else
 				$topicDescriptionWhere = '';
