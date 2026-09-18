@@ -3942,25 +3942,25 @@ function parsesmileys(&$message)
 			$specialChars = $smcFunc['htmlspecialchars']($smileysfrom[$i], ENT_QUOTES);
 			$smileyCode = '<img src="' . $smileys_path . $smileysto[$i] . '" alt="' . strtr($specialChars, array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')) . '" title="' . strtr($smcFunc['htmlspecialchars']($smileysdescs[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')) . '" class="smiley">';
 
-			$smileyPregReplacements[$smileysfrom[$i]] = $smileyCode;
+			$smileyPregReplacements[mb_strtolower($smileysfrom[$i])] = $smileyCode;
 
 			$searchParts[] = $smileysfrom[$i];
 			if ($smileysfrom[$i] != $specialChars)
 			{
-				$smileyPregReplacements[$specialChars] = $smileyCode;
+				$smileyPregReplacements[mb_strtolower($specialChars)] = $smileyCode;
 				$searchParts[] = $specialChars;
 
 				// Some 2.0 hex htmlchars are in there as 3 digits; allow for finding leading 0 or not
 				$specialChars2 = preg_replace('/&#(\d{2});/', '&#0$1;', $specialChars);
 				if ($specialChars2 != $specialChars)
 				{
-					$smileyPregReplacements[$specialChars2] = $smileyCode;
+					$smileyPregReplacements[mb_strtolower($specialChars2)] = $smileyCode;
 					$searchParts[] = $specialChars2;
 				}
 			}
 		}
 
-		$smileyPregSearch = '~(?<=[>:\?\.\s' . $non_breaking_space . '[\]()*\\\;]|(?<![a-zA-Z0-9])\(|^)(' . build_regex($searchParts, '~') . ')(?=[^[:alpha:]0-9]|$)~' . ($context['utf8'] ? 'u' : '');
+		$smileyPregSearch = '~(?<=[>:\?\.\s' . $non_breaking_space . '[\]()*\\\;]|(?<![a-zA-Z0-9])\(|^)(' . build_regex($searchParts, '~') . ')(?=[^[:alpha:]0-9]|$)~' . ($context['utf8'] ? 'ui' : 'i');
 	}
 
 	// If there are no smileys defined, no need to replace anything
@@ -3972,7 +3972,7 @@ function parsesmileys(&$message)
 		$smileyPregSearch,
 		function($matches) use ($smileyPregReplacements)
 		{
-			return $smileyPregReplacements[$matches[1]];
+			return $smileyPregReplacements[mb_strtolower($matches[1])];
 		},
 		$message
 	);
