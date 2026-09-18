@@ -406,7 +406,8 @@ function getBoardIndex($board_index_options)
 
 		// Prepare the subject, and make sure it's not too long.
 		censorText($row_board['subject']);
-		$row_board['short_subject'] = shorten_subject($row_board['subject'], 24);
+		$threadTags = makeThreadTags($row_board['subject']);
+		$row_board['short_subject'] = htmlspecialchars(shorten_subject(htmlspecialchars_decode($threadTags[0]), 24)) . ' ' . $threadTags[1];
 		$this_last_post = array(
 			'id' => $row_board['id_msg'],
 			'id_member_started' => $row_board['id_member_started'],

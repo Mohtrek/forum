@@ -8479,7 +8479,7 @@ function makeThreadTags($title)
 		if (!in_array($tag, $tagged))
 		{
 			array_push($tagged, $tag);
-			$title = htmlspecialchars(str_replace('[' . $tag . ']', '', $title));
+			$title = str_replace('[' . $tag . ']', '', $title);
 			$tag = htmlspecialchars(strtolower($tag));
 
 			// Start at a hue that makes "18" red.
@@ -8570,7 +8570,7 @@ function makeThreadTags($title)
 		}
 	}
 
-	return array(trim($title), $tags);
+	return array(htmlspecialchars(trim($title)), $tags);
 }
 
 // Strip tags from title.
