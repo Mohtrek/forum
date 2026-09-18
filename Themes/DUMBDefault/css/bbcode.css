@@ -89,14 +89,11 @@
 	max-width: 100%;
 }
 
-.spoilertxt, .spoilertxt a{ 
+.spoilertxt:not(:hover),
+.spoilertxt:not(:hover) *,
+.spoilertxt:not(:hover) a { 
 	color: #b1b1b1 !important;
 	background-color: #b1b1b1 !important;
-}
-
-.spoilertxt:hover, .spoilertxt:hover a { 
-	color: inherit !important;
-	background-color: inherit !important;
 }
 
 .spoilertxt > img {
