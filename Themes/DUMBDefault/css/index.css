@@ -2699,7 +2699,9 @@ dl.addrules dt.floatleft {
 	right: 0;
 	top: 0;
 }
-.windowbg.windowbg.alert-unread {
+.windowbg.windowbg.alert-unread:not(:hover),
+.windowbg.windowbg.alert-unread:not(:hover) a,
+.windowbg.windowbg.alert-unread:not(:hover) a:visited {
 	background-color: var(--sec-bg-color);
 	color: var(--accent-label-color-sec);
 }
@@ -2906,7 +2908,9 @@ dl.addrules dt.floatleft {
 }
 
 /* Add some hover on table rows */
-tr.windowbg:hover {
+tr.windowbg:hover,
+tr.windowbg:hover a,
+tr.windowbg:hover a:visited {
 	color: var(--accent-label-color-ter);
 	background: var(--ter-color);
 }
