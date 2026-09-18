@@ -8570,7 +8570,7 @@ function makeThreadTags($title)
 		}
 	}
 
-	return array(htmlspecialchars(trim($title)), $tags);
+	return [htmlspecialchars(string: trim($title), double_encode: false), $tags];
 }
 
 // Strip tags from title.
