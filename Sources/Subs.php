@@ -8612,7 +8612,7 @@ function getRecentActivity($start_date = 0, $end_date = 0, $limit = 15)
 			'end_date' => $end_date,
 			'limit' => $limit,
 			'ignore_users' => !empty($user_info['ignoreusers']) ? $user_info['ignoreusers'] : [-1],
-			'current_group' => $user_info['id_group'],
+			'current_group' => $user_info['id_group'] ?? 0,
 		)
 	);
 
