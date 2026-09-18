@@ -594,7 +594,7 @@ function template_showAlerts()
 		foreach ($context['alerts'] as $id => $alert)
 		{
 			echo '
-				<tr class="windowbg">
+				<tr class="windowbg alert-' . ($alert['is_read'] ? 'read' : 'unread') . '">
 					<td class="alert_image">
 						<div>
 							', empty($alert['sender']['avatar']['image']) ? '' : $alert['sender']['avatar']['image'] . '

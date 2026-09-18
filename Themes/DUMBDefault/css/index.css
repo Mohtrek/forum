@@ -2699,6 +2699,10 @@ dl.addrules dt.floatleft {
 	right: 0;
 	top: 0;
 }
+.windowbg.windowbg.alert-unread {
+	background-color: var(--sec-bg-color);
+	color: var(--accent-label-color-sec);
+}
 
 /* Styles for the memberlist section.
 ------------------------------------------------- */
