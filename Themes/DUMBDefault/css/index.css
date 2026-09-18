@@ -3204,6 +3204,7 @@ span.postby {
 #topic_container .windowbg {
 	padding: 0;
 	margin: 0;
+	margin-bottom: 3px;
 	overflow: hidden;
 }
 #topic_header, #topic_container .windowbg {
