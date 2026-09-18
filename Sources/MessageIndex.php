@@ -736,7 +736,7 @@ censorText($row['first_subject']);
 	if ($context['can_mark_notify'])
 		$context['normal_buttons']['notify'] = array(
 			'lang' => true,
-			'text' => 'notify_board_' . $context['board_notification_mode'],
+			'text' => 'notify_board_label',
 			'sub_buttons' => array(
 				array(
 					'text' => 'notify_board_1',

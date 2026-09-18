@@ -1296,7 +1296,7 @@ function Display()
 
 	if ($context['can_set_notify'])
 		$context['normal_buttons']['notify'] = array(
-			'text' => 'notify_topic_' . $context['topic_notification_mode'],
+			'text' => 'notify_topic_label',
 			'sub_buttons' => array(
 				array(
 					'test' => 'can_unwatch',

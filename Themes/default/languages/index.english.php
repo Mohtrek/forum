@@ -903,6 +903,7 @@ $txt['hide_recentactivity'] = 'Hide Recent Activity';
 $txt['show_recentactivity'] = 'Show Recent Activity';
 
 // Notification post control
+$txt['notify_topic_label'] = 'Change Alert Settings';
 $txt['notify_topic_0'] = 'Not Following';
 $txt['notify_topic_1'] = 'No Alerts or Emails';
 $txt['notify_topic_2'] = 'Receive Alerts';
@@ -911,6 +912,7 @@ $txt['notify_topic_0_desc'] = 'You will not receive any emails or alerts for thi
 $txt['notify_topic_1_desc'] = 'You will not receive any emails or alerts but only @mentions by other members.';
 $txt['notify_topic_2_desc'] = 'You will receive alerts for this topic.';
 $txt['notify_topic_3_desc'] = 'You will receive both alerts and e-mails for this topic.';
+$txt['notify_board_label'] = 'Change Alert Settings';
 $txt['notify_board_1'] = 'No Alerts or Emails';
 $txt['notify_board_2'] = 'Receive Alerts';
 $txt['notify_board_3'] = 'Receive Emails and Alerts';
