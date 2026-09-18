@@ -90,8 +90,8 @@ function template_alerts_popup()
 	echo '
 		<div class="alert_bar">
 			<div class="alerts_opts block">
-				<a href="' . $scripturl . '?action=profile;area=notification;sa=markread;', $context['session_var'], '=', $context['session_id'], '" onclick="return markAlertsRead(this)">', $txt['mark_alerts_read'], '</a>
-				<a href="', $scripturl, '?action=profile;area=notification;sa=alerts" class="floatright">', $txt['alert_settings'], '</a>
+				<a href="', $scripturl, '?action=profile;area=notification;sa=alerts">', $txt['alert_settings'], '</a>
+				<a href="' . $scripturl . '?action=profile;area=notification;sa=markread;', $context['session_var'], '=', $context['session_id'], '" onclick="return markAlertsRead(this)" class="button floatright">', $txt['mark_alerts_read'], '</a>
 			</div>
 			<div class="alerts_box centertext">
 				<a href="', $scripturl, '?action=profile;area=showalerts" class="button">', $txt['all_alerts'], '</a>
