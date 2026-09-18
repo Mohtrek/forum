@@ -544,12 +544,12 @@ strong[id^='child_list_']::after {
 }
 
 /* Posts and personal messages displayed throughout the forum. */
-.post {
+.post, #preview_section {
 	overflow: auto;
 	line-height: 1.4em;
 	padding: 1px 0;
 }
-.post .inner {
+.post .inner, #preview_body {
 	font-size: 0.9em;
 }
 

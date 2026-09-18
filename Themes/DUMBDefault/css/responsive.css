@@ -73,6 +73,25 @@
 		width: calc(100% - 90px);
 		max-width: unset;
 	}
+	#preview_section {
+		position: relative;
+	}
+	#preview_body {
+		margin: 0 0 0 175px;
+		padding-top: calc(12px + 7px);
+		padding-bottom: calc(12px + 2px);
+		padding-left: calc(16px + 0.5em + 2px);
+		padding-right: calc(16px + 8px);
+	}
+	#preview_body::before {
+		content: "(Profile will display in this area when you make your post.)";
+		display: block;
+		left: 0;
+		margin-top: -16px;
+		position: absolute;
+		text-align: center;
+		width: 175px;
+	}
 }
 
 /* We have shared things... */
