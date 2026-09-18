@@ -209,7 +209,8 @@ $txt['who_off'] = 'You cannot access Who\'s Online right now because it is disab
 $txt['merge_create_topic_failed'] = 'Error creating a new topic.';
 $txt['merge_need_more_topics'] = 'Merge topics requires at least two topics to merge.';
 
-$txt['post_WaitTime_broken'] = 'The last posting from your IP was less than %1$d seconds ago. Please try again later.';
+$txt['post_WaitTime_broken'] = 'The last posting from your IP was less than %1$d seconds ago. You need to wait %2$d more seconds!';
+$txt['error_post_WaitTime_broken'] = $txt['post_WaitTime_broken'];
 $txt['register_WaitTime_broken'] = 'You already registered just %1$d seconds ago!';
 $txt['login_WaitTime_broken'] = 'You will have to wait about %1$d seconds to login again, sorry.';
 $txt['pm_WaitTime_broken'] = 'The last personal message from your IP was less than %1$d seconds ago. Please try again later.';

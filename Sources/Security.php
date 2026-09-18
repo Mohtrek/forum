@@ -1168,7 +1168,7 @@ function boardsAllowedTo($permissions, $check_access = true, $simple = true)
  * @param boolean $only_return_result Whether you want the function to die with a fatal_lang_error.
  * @return bool Whether they've posted within the limit
  */
-function spamProtection($error_type, $only_return_result = false)
+function spamProtection($error_type, $only_return_result = false, $return_error = false)
 {
 	global $modSettings, $user_info, $smcFunc;
 
@@ -1201,6 +1201,34 @@ function spamProtection($error_type, $only_return_result = false)
 		)
 	);
 
+	$request = $smcFunc['db_query']('', '
+		SELECT log_time
+		FROM {db_prefix}log_floodcontrol
+		WHERE log_type = {string:log_type}
+			AND ip = {inet:ip_address}
+		LIMIT 1',
+		[
+			'log_type' => $error_type,
+			'ip_address' => $user_info['ip'],
+		],
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$timeLeft = $timeLimit - (time() - (int) $row['log_time']);
+		if ($timeLeft > 0)
+		{
+			$smcFunc['db_free_result']($request);
+			$errMsg = "{$error_type}_WaitTime_broken";
+			if ($only_return_result)
+				if ($return_error)
+					return [$errMsg, [$timeLimit, $timeLeft]];
+				else
+					return true;
+			fatal_lang_error($errMsg, false, [$timeLimit, $timeLeft]);
+		}
+	}
+
 	// Add a new entry, deleting the old if necessary.
 	$smcFunc['db_insert']('replace',
 		'{db_prefix}log_floodcontrol',
@@ -1208,16 +1236,6 @@ function spamProtection($error_type, $only_return_result = false)
 		array($user_info['ip'], time(), $error_type),
 		array('ip', 'log_type')
 	);
-
-	// If affected is 0 or 2, it was there already.
-	if ($smcFunc['db_affected_rows']() != 1)
-	{
-		// Spammer!  You only have to wait a *few* seconds!
-		if (!$only_return_result)
-			fatal_lang_error($error_type . '_WaitTime_broken', false, array($timeLimit));
-
-		return true;
-	}
 
 	// They haven't posted within the limit.
 	return false;
