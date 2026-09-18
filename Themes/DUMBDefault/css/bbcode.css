@@ -179,9 +179,14 @@ span[style="color: purple;"] {
 	position: relative;
 }
 
+.bbc_standard_quote:not([style="overflow-y: hidden; max-height: 300px;"]) {
+	max-height: unset !important;
+}
+
 .bbc_standard_quote[style="overflow-y: hidden; max-height: 300px;"] a.expand {
 	background: linear-gradient(to bottom, transparent, var(--ter-bg-color));
 	bottom: 0;
+	color: var(--accent-label-color-ter);
 	display: block;
 	font-weight: bold;
 	left: 0;
