@@ -1142,7 +1142,7 @@ html[lang="el-GR"] .inline_mod_check {
 /* The framing graphics */
 /* The top bar. */
 #top_section {
-	z-index: 1;
+	z-index: 7;
 }
 #top_section::after {
 	content: "";
