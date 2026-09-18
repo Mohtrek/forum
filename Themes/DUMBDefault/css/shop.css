@@ -15,3 +15,7 @@ table.shop-items-table th {
 	background: var(--skeuomorphism);
 	padding: 10px;
 }
+
+td.item_image img {
+	max-width: fit-content;
+}
