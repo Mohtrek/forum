@@ -8594,9 +8594,17 @@ function getRecentActivity($start_date = 0, $end_date = 0, $limit = 15)
 		JOIN {db_prefix}messages AS m ON m.id_topic = t.id_topic
 		JOIN {db_prefix}members AS mem ON mem.id_member = m.id_member
 		JOIN {db_prefix}messages AS mf ON mf.id_msg = t.id_first_msg
+		LEFT JOIN smf_board_permissions_view bpv ON bpv.id_board = t.id_board AND bpv.id_group = {int:current_group}
 		WHERE m.poster_time BETWEEN {int:start_date} AND {int:end_date}
 		' . ($user_info['ignoreusers_hide_posts'] ? ' AND m.id_member NOT IN ({array_int:ignore_users})' : '') . '
 		' . ($user_info['ignoreusers_hide_topics'] ? ' AND t.id_member_started NOT IN ({array_int:ignore_users})' : '') . '
+		' . ($user_info['id_group'] == 1 ? '' : '
+			AND COALESCE(
+				bpv.deny,
+				(SELECT deny FROM smf_board_permissions_view bpv2 WHERE bpv2.id_board = t.id_board AND bpv2.id_group = -1),
+				1
+			) = 0
+		') . '
 		ORDER BY m.poster_time DESC
 		LIMIT {int:limit}',
 		array(
@@ -8604,6 +8612,7 @@ function getRecentActivity($start_date = 0, $end_date = 0, $limit = 15)
 			'end_date' => $end_date,
 			'limit' => $limit,
 			'ignore_users' => !empty($user_info['ignoreusers']) ? $user_info['ignoreusers'] : [-1],
+			'current_group' => $user_info['id_group'],
 		)
 	);
 
