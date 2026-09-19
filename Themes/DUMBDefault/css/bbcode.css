@@ -172,15 +172,15 @@ span[style="color: purple;"] {
     padding: 2px;
 }
 
-.bbc_standard_quote[style="overflow-y: hidden; max-height: 300px;"] {
+blockquote[style="overflow-y: hidden; max-height: 300px;"] {
 	position: relative;
 }
 
-.bbc_standard_quote:not([style="overflow-y: hidden; max-height: 300px;"]) {
+blockquote:not([style="overflow-y: hidden; max-height: 300px;"]) {
 	max-height: unset !important;
 }
 
-.bbc_standard_quote[style="overflow-y: hidden; max-height: 300px;"] a.expand {
+blockquote[style="overflow-y: hidden; max-height: 300px;"] a.expand {
 	background: linear-gradient(to bottom, transparent, var(--ter-bg-color));
 	bottom: 0;
 	color: var(--accent-label-color-ter);
@@ -190,6 +190,16 @@ span[style="color: purple;"] {
 	position: absolute;
 	text-align: center;
 	width: 100%;
+}
+
+blockquote.bbc_standard_quote blockquote a.expand {
+	background: none;
+	display: inline;
+	position: static;
+}
+
+blockquote.bbc_standard_quote blockquote {
+	position: static;
 }
 
 /* Textbox styles */
