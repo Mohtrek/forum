@@ -45,6 +45,7 @@ class DUMBUsergroup extends Module
     {
 		// Get the forum groups, except admin/mod
 		$groups = Database::Get(0, 1000, 'm.group_name', 'membergroups AS m', ['m.id_group', 'm.group_name'], 'WHERE m.min_posts = -1 AND m.id_group <> 1 AND m.id_group <> 3');
+        $select = '';
 
 		// For some reason you are using this module, but have not groups whatsoever
 		if (empty($groups))
