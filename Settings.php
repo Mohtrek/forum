@@ -155,13 +155,13 @@ $db_mb4 = null;
  *
  * @var string
  */
-$cache_accelerator = '';
+$cache_accelerator = 'Apcu';
 /**
  * The level at which you would like to cache. Between 0 (off) through 3 (cache a lot).
  *
  * @var int
  */
-$cache_enable = 0;
+$cache_enable = 1;
 /**
  * This is only used for memcache / memcached. Should be a string of 'server:port,server:port'
  *
