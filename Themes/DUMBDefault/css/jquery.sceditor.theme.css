@@ -61,6 +61,9 @@ div.sceditor-dropdown a:link {
 div.sceditor-dropdown label {
 	color: var(--txt-color);
 }
+.sceditor-insertemoticon {
+	text-align: center;
+}
 
 @media screen and (min-width: 720px) {
 	.sceditor-container {
