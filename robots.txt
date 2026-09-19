@@ -9,6 +9,7 @@ Disallow: /index.php?msg=
 Disallow: /index.php?action=shop
 Disallow: /index.php?action=pm
 Disallow: /index.php/*/sort,
+Disallow: /index.php/*/prev_next,
 Disallow: /index.php?board=
 
 User-agent: AhrefsBot
