@@ -467,7 +467,9 @@ function template_body_below()
   // Space above footer
   echo '
 	  <section id="above_footer">
-		  <a href="', $scripturl,'">Go Home</a>
+		  <a href="', $scripturl,'">
+		  	<img src="/assets/ui/DUMB.gif" alt="Go Home" title="Go Home">
+		  </a>
 	  </section>
 	 </div><!-- #wrapper -->
   ';
