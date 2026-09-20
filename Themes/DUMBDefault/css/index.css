@@ -46,6 +46,8 @@ body.color-scheme-light {
 	--info-color: #ffbf2f;
 	--valid-color: #03be25;
 	--invalid-color: #d50909;
+
+	--ut-icon-filter: hue-rotate(0);
 }
 @media (prefers-color-scheme: light) {
 	/* Same as the above block */
@@ -53,7 +55,7 @@ body.color-scheme-light {
 		--transparent-bg: rgba(255,255,255,0.85);
 		--pri-bg-color: #e9e9e9;
 		--sec-bg-color: #c3c3c3;
-		--ter-bg-color: #535353;
+		--ter-bg-color: #B0B0B0;
 		--txt-color: #3b3b3b;
 		--txt-color-off: #3b3b3b85;
 		--skeuomorphism-end-color: #b9b9b9;
@@ -69,6 +71,8 @@ body.color-scheme-light {
 		--info-color: #ffbf2f;
 		--valid-color: #03be25;
 		--invalid-color: #d50909;
+
+		--ut-icon-filter: hue-rotate(0);
 	}
 }
 body {
