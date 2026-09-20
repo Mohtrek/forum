@@ -8644,4 +8644,44 @@ function getRecentActivity($start_date = 0, $end_date = 0, $limit = 15)
 
 	return $topics;
 }
-?>
+
+function profileSpanStart($spanName)
+{
+	global $spanMeasurements;
+
+	if (empty($spanMeasurements)) {
+		$spanMeasurements = [];
+	}
+	$spanMeasurements[$spanName] = [
+		'start' => microtime(true)
+	];
+}
+
+function profileSpanEnd($spanName)
+{
+	global $spanMeasurements;
+
+	if (empty($spanMeasurements) || empty($spanMeasurements[$spanName])) {
+		return;
+	}
+
+	$spanMeasurements[$spanName]['end'] = microtime(true);
+	$spanMeasurements[$spanName]['duration'] = $spanMeasurements[$spanName]['end'] - $spanMeasurements[$spanName]['start'];
+}
+
+function profileSpanPrint()
+{
+	global $spanMeasurements;
+
+	if (empty($spanMeasurements)) {
+		return;
+	}
+	echo "\n<!-- Dumb profiling of DUMB:";
+	foreach ($spanMeasurements as $name => $data) {
+		if (!isset($data['duration'])) {
+			continue;
+		}
+		echo "\nSpan $name took " . round($data['duration'], 3) . " seconds.";
+	}
+	echo "\n-->";
+}

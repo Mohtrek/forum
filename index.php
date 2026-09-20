@@ -72,6 +72,7 @@ if (empty($cachedir) || !is_dir($cachedir) || !is_writable($cachedir))
 // Without those we can't go anywhere
 require_once($sourcedir . '/QueryString.php');
 require_once($sourcedir . '/Subs.php');
+profileSpanStart('setup');
 require_once($sourcedir . '/Subs-Auth.php');
 require_once($sourcedir . '/Errors.php');
 require_once($sourcedir . '/Load.php');
@@ -182,7 +183,10 @@ set_exception_handler('smf_exception_handler');
 loadSession();
 
 // What function shall we execute? (done like this for memory's sake.)
+profileSpanEnd('setup');
+profileSpanStart('pre-action');
 call_user_func(smf_main());
+profileSpanEnd('action');
 
 // Call obExit specially; we're coming from the main area ;).
 obExit(null, null, true);
@@ -272,6 +276,8 @@ function smf_main()
 
 	// Make sure that our scheduled tasks have been running as intended
 	check_cron();
+	profileSpanEnd('pre-action');
+	profileSpanStart('action');
 
 	// Is the forum in maintenance mode? (doesn't apply to administrators.)
 	if (!empty($maintenance) && !allowedTo('admin_forum'))
@@ -450,7 +456,9 @@ function smf_main()
 		require_once($sourcedir . '/' . $actionArray[$_REQUEST['action']][0]);
 
 	// Do the right thing.
-	return call_helper($actionArray[$_REQUEST['action']][1], true);
+	$retval = call_helper($actionArray[$_REQUEST['action']][1], true);
+	profileSpanEnd('action');
+	return $retval;
 }
 
 ?>
