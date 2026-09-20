@@ -559,7 +559,9 @@ function template_single_post($message)
 			echo '<li class="blurb">', $message['member']['blurb'], '</li>';
 
 		// Show the level and title
-		echo '<li class="icons">', $postgroup, ' ', $message['member']['group_icons'], '</li>';
+		echo '<li class="icons">', ($message['member']['is_banned'] ?
+			'<img src="/shop_items/items/BANNED.png" alt="Banned" title="Banned">' :
+			($postgroup . ' ' . $message['member']['group_icons'])), '</li>';
 
 		// Show the pronouns
 		if (!empty($message['custom_fields']['standard']))
