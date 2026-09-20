@@ -178,7 +178,8 @@ blockquote[style="overflow-y: hidden; max-height: 300px;"] {
 	position: relative;
 }
 
-blockquote:not([style="overflow-y: hidden; max-height: 300px;"]) {
+blockquote:not([style="overflow-y: hidden; max-height: 300px;"]),
+blockquote:not([style="overflow-y: hidden; max-height: 300px;"]) blockquote {
 	max-height: unset !important;
 }
 
@@ -196,9 +197,7 @@ blockquote[style="overflow-y: hidden; max-height: 300px;"] a.expand {
 }
 
 blockquote.bbc_standard_quote blockquote a.expand {
-	background: none;
-	display: inline;
-	position: static;
+	display: none;
 }
 
 blockquote.bbc_standard_quote blockquote {
