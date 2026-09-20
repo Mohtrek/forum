@@ -1,4 +1,42 @@
 /* --- BBCode Styling --- */
+:root {
+	--bbc-orange: orange;
+	--bbc-yellow: yellow;
+	--bbc-cyan: cyan;
+	--bbc-blue: #344aff;
+	--bbc-purple: #a806f2;
+	--bbc-pink: pink;
+}
+
+body.color-scheme-light, body.color-scheme-os {
+	--bbc-orange: #ff6c00;
+	--bbc-yellow: #f6b517;
+	--bbc-cyan: #00cece;
+	--bbc-blue: blue;
+	--bbc-purple: purple;
+	--bbc-pink: #ff758e;
+}
+
+/* Color remapping */
+span[style="color: orange;"] {
+	color: var(--bbc-orange) !important;
+}
+span[style="color: yellow;"] {
+	color: var(--bbc-yellow) !important;
+}
+span[style="color: cyan;"] {
+	color: var(--bbc-cyan) !important;
+}
+span[style="color: blue;"] {
+	color: var(--bbc-blue) !important;
+}
+span[style="color: purple;"] {
+	color: var(--bbc-purple) !important;
+}
+span[style="color: pink;"] {
+	color: var(--bbc-purple) !important;
+}
+
 /* A code block */
 .bbc_code {
 	display: block;
@@ -136,15 +174,6 @@
 	/* Same as above */
 	text-shadow: attr(data-color, type(<color>)) 0px 0px 2px,
 				 attr(data-color, type(<color>)) 0px 0px 6px;
-}
-
-/* Remap some colors that are hard to read on the dark theme */
-span[style="color: blue;"] {
-	color: #344aff !important;
-}
-
-span[style="color: purple;"] {
-	color: #a806f2 !important;
 }
 
 /* [souptable] styles */
