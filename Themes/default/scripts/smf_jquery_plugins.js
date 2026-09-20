@@ -752,7 +752,11 @@ $(function() {
 	});
 	$( '.mobile_user_menu' ).click(function() {
 		$( '#mobile_user_menu' ).show();
-		});
+	});
+	$('.popup_container').click(e => {
+		if (e.target === e.currentTarget)
+			$(e.currentTarget).hide();
+	});
 	$( '.hide_popup' ).click(function() {
 		$( '#mobile_user_menu' ).hide();
 	});
