@@ -655,6 +655,7 @@ function Arcade_load_language()
 {
 	global $boarddir, $arcadeModSettings, $modSettings, $smcFunc, $db_type, $txt;
 
+	profileSpanStart('arcade');
 	// load Arcade mod settings
 	loadArcadeModSettings();
 
@@ -711,6 +712,7 @@ function Arcade_load_language()
 			);
 		}
 	}
+	profileSpanEnd('arcade');
 }
 
 function Arcade_uninstall_options()
