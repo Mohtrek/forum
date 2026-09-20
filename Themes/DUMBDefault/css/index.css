@@ -3775,7 +3775,6 @@ ul.post_options li {
 /* Cat_bar / catbg */
 div.cat_bar {
 	background: var(--skeuomorphism);
-	border-bottom: 1px solid #777;
 	padding: 0;
 	text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.2);
 }
@@ -3784,23 +3783,20 @@ div.cat_bar {
 }
 /* Styles for rounded headers. */
 .cat_bar .desc {
-	color: #fff;
+	color: var(--txt-color);
 	font-size: 12px;
 	line-height: 1.5em;
 	font-weight: normal;
 	margin: -8px 0 4px 8px;
 }
 .cat_bar .desc a {
-	color: #fff;
+	color: var(--txt-color);
 	font-weight: 600;
 }
 h3.catbg {
 	overflow: hidden;
 	font-size: 1.1em;
 	font-family: "Tahoma", sans-serif;
-}
-h3.catbg, h3.catbg a, h3.catbg a:hover {
-	color: #fff;
 }
 h3.catbg a:hover {
 	text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.4);

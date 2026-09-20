@@ -17,7 +17,7 @@
 	.lastpost {
 		margin: 0 0 0 20px;
 	}
-	.board_stats {
+	.topic_grid .board_stats {
 		display: none;
 	}
 	#alerts .alert_time {
@@ -202,7 +202,7 @@
 	#footer {
 		padding: 10px;
 	}
-	#top_section, #top_section .inner_wrap, #wrapper, #header, #footer .inner_wrap {
+	#top_section, #top_section .inner_wrap, #wrapper, #header, #footer, .inner_wrap {
 		width: 100%;
 	}
 	#upper_section, #inner_section, #content_section {
@@ -241,12 +241,14 @@
 		min-height: 2em;
 	}
 	.up_contain {
-		display: inline-block;
 		width: 100%;
+		grid-template-columns: min-content 1fr 16%;
 	}
 	.up_contain .lastpost {
 		border-top: 1px solid #ddd;
 		min-height: initial;
+		grid-column-start: 1;
+		grid-column-end: 4;
 	}
 	.lastpost p {
 		margin: 5px;
