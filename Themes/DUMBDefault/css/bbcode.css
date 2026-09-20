@@ -190,6 +190,7 @@ blockquote[style="overflow-y: hidden; max-height: 300px;"] a.expand {
 	position: absolute;
 	text-align: center;
 	width: 100%;
+	z-index: 1;
 }
 
 blockquote.bbc_standard_quote blockquote a.expand {
