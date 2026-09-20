@@ -3090,7 +3090,7 @@ h3 .collapse {
 	overflow: hidden;
 	margin: 0 0 3px 0;
 	display: grid;
-	grid-template-columns: auto 50% 10% 35%;
+	grid-template-columns: min-content 1fr 12% 25%;
 	flex-wrap: wrap;
 }
 /* Child boards */
