@@ -65,7 +65,6 @@ function getBoardIndex($board_index_options)
 		'current_member' => $user_info['id'],
 		'child_level' => $board_index_options['base_level'],
 		'max_child_level' => $board_index_options['base_level'] + $modSettings['boardindex_max_depth'],
-		'ignore_users' => !empty($user_info['ignoreusers']) ? $user_info['ignoreusers'] : [-1],
 		'blank_string' => ''
 	);
 
@@ -95,13 +94,13 @@ function getBoardIndex($board_index_options)
 				m.subject, m.id_topic, COALESCE(mem.real_name, m.poster_name) AS real_name,
 				IFNULL(mem.id_group, 0) AS id_group,
 				' . ($user_info['is_guest'] ? ' 1 AS is_read, 0 AS new_from,' : '
-				(CASE WHEN COALESCE(lb.id_msg, 0) >= m.id_msg THEN 1 ELSE 0 END) AS is_read, COALESCE(lb.id_msg, -1) + 1 AS new_from,' . ($board_index_options['include_categories'] ? '
+				(CASE WHEN COALESCE(lb.id_msg, 0) >= b.id_last_msg THEN 1 ELSE 0 END) AS is_read, COALESCE(lb.id_msg, -1) + 1 AS new_from,' . ($board_index_options['include_categories'] ? '
 				c.can_collapse,' : '')) . '
 				COALESCE(mem.id_member, 0) AS id_member, mem.avatar, m.id_msg' . (!empty($settings['avatars_on_boardIndex']) ? ',  mem.email_address, mem.avatar, COALESCE(am.id_attach, 0) AS member_id_attach, am.filename AS member_filename, am.attachment_type AS member_attach_type' : '') . '
 			FROM boards_cte AS b' . ($board_index_options['include_categories'] ? '
 				LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)' : '') . '
-				LEFT JOIN {db_prefix}topics AS t ON (t.id_board = b.id_board)
-				LEFT JOIN {db_prefix}messages AS m ON (m.id_topic = t.id_topic)
+				LEFT JOIN {db_prefix}messages AS m ON (b.id_last_msg = m.id_msg)
+				LEFT JOIN {db_prefix}topics AS t ON (m.id_topic = t.id_topic)
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)' . (!empty($settings['avatars_on_boardIndex']) ? '
 				LEFT JOIN {db_prefix}attachments AS am ON (am.id_member = mem.id_member)' : '') . '' . ($user_info['is_guest'] ? '' : '
 				LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})') . '
@@ -125,8 +124,8 @@ function getBoardIndex($board_index_options)
 				COALESCE(mem.id_member, 0) AS id_member, mem.avatar, m.id_msg' . (!empty($settings['avatars_on_boardIndex']) ? ',  mem.email_address, mem.avatar, COALESCE(am.id_attach, 0) AS member_id_attach, am.filename AS member_filename, am.attachment_type AS member_attach_type' : '') . '
 			FROM {db_prefix}boards AS b' . ($board_index_options['include_categories'] ? '
 				LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)' : '') . '
-				LEFT JOIN {db_prefix}topics AS t ON (t.id_board = b.id_board)
-				LEFT JOIN {db_prefix}messages AS m ON (m.id_topic = t.id_topic)
+				LEFT JOIN {db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
+				LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)' . (!empty($settings['avatars_on_boardIndex']) ? '
 				LEFT JOIN {db_prefix}attachments AS am ON (am.id_member = mem.id_member)' : '') . '' . ($user_info['is_guest'] ? '' : '
 				LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})') . '
@@ -155,14 +154,7 @@ function getBoardIndex($board_index_options)
 	$row_boards = array();
 
 	foreach ($smcFunc['db_fetch_all']($result_boards) as $row) {
-		if (isset($row_boards[$row['id_board']])) {
-			if ($user_info['ignoreusers_hide_posts'] && in_array($row['id_member'], $user_info['ignoreusers'])) continue;
-			if ($user_info['ignoreusers_hide_topics'] && in_array($row['id_member_started'], $user_info['ignoreusers'])) continue;
-			if ($row_boards[$row['id_board']]['id_msg'] > $row['id_msg']) continue;
-			$row_boards[$row['id_board']] = $row;
-		}
-		else
-			$row_boards[$row['id_board']] = $row;
+		$row_boards[$row['id_board']] = $row;
 	}
 
 	$smcFunc['db_free_result']($result_boards);
@@ -408,6 +400,11 @@ function getBoardIndex($board_index_options)
 		censorText($row_board['subject']);
 		$threadTags = makeThreadTags($row_board['subject']);
 		$row_board['short_subject'] = htmlspecialchars(shorten_subject(htmlspecialchars_decode($threadTags[0]), 24)) . ' ' . $threadTags[1];
+		$isLastPosterIgnored = $user_info['ignoreusers_hide_posts'] && in_array($row['id_member'], $user_info['ignoreusers']);
+		$isFirstPosterIgnored = $user_info['ignoreusers_hide_topics'] && in_array($row['id_member_started'], $user_info['ignoreusers']);
+		$hasLastPoster = !empty($row_board['poster_name']);
+		$isLastPosterMember = !empty($row_board['id_member']);
+		$showLastPosterLink = $hasLastPoster && !$isLastPosterIgnored && $isLastPosterMember;
 		$this_last_post = array(
 			'id' => $row_board['id_msg'],
 			'id_member_started' => $row_board['id_member_started'],
@@ -418,8 +415,14 @@ function getBoardIndex($board_index_options)
 				'id' => $row_board['id_member'],
 				'username' => $row_board['poster_name'] != '' ? $row_board['poster_name'] : $txt['not_applicable'],
 				'name' => $row_board['real_name'],
-				'href' => $row_board['poster_name'] != '' && !empty($row_board['id_member']) ? $scripturl . '?action=profile;u=' . $row_board['id_member'] : '',
-				'link' => $row_board['poster_name'] != '' ? (!empty($row_board['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row_board['id_member'] . '" class="group-' . $row_board['id_group'] . '">' . $row_board['real_name'] . '</a>' : $row_board['real_name']) : $txt['not_applicable'],
+				'href' => $showLastPosterLink ? $scripturl . '?action=profile;u=' . $row_board['id_member'] : '',
+				'link' => $hasLastPoster ?
+					$isLastPosterMember ?
+						$isLastPosterIgnored ?
+							'[Ignored user]' :
+							'<a href="' . $scripturl . '?action=profile;u=' . $row_board['id_member'] . '" class="group-' . $row_board['id_group'] . '">' . $row_board['real_name'] . '</a>' :
+						$row_board['real_name'] :
+					$txt['not_applicable'],
 			),
 			'start' => 'msg' . $row_board['new_from'],
 			'topic' => $row_board['id_topic']
@@ -433,13 +436,16 @@ function getBoardIndex($board_index_options)
 			));
 
 		// Provide the href and link.
-		if ($row_board['subject'] != '')
+		if ($row_board['subject'] != '' && !$isFirstPosterIgnored)
 		{
-		// $row_board['subject'] = stripThreadTags($row_board['subject']);
 			$this_last_post['href'] = $scripturl . '?topic=' . $row_board['id_topic'] . '.msg' . ($user_info['is_guest'] ? $row_board['id_msg'] : $row_board['new_from']) . (empty($row_board['is_read']) ? ';boardseen' : '') . '#new';
 			$this_last_post['link'] = '<a href="' . $this_last_post['href'] . '" title="' . $row_board['subject'] . '">' . $row_board['short_subject'] . '</a>';
 		}
-
+		elseif ($isFirstPosterIgnored)
+		{
+			$this_last_post['href'] = '';
+			$this_last_post['link'] = '[Topic by ignored user]';
+		}
 		else
 		{
 			$this_last_post['href'] = '';
