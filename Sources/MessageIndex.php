@@ -231,14 +231,14 @@ function MessageIndex()
 			if (empty($row['id_member']))
 				continue;
 
-			$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '" class="group-' . $row['id_group'] . '">' . $row['real_name'] . '</a>';
+			$lastPostLink = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '" class="group-' . $row['id_group'] . '">' . $row['real_name'] . '</a>';
 
 			$is_buddy = in_array($row['id_member'], $user_info['buddies']);
 			if ($is_buddy)
-				$link = '<strong>' . $link . '</strong>';
+				$lastPostLink = '<strong>' . $lastPostLink . '</strong>';
 
 			if (!empty($row['show_online']) || allowedTo('moderate_forum'))
-				$context['view_members_list'][$row['log_time'] . $row['member_name']] = empty($row['show_online']) ? '<em>' . $link . '</em>' : $link;
+				$context['view_members_list'][$row['log_time'] . $row['member_name']] = empty($row['show_online']) ? '<em>' . $lastPostLink . '</em>' : $lastPostLink;
 			// @todo why are we filling this array of data that are just counted (twice) and discarded? ???
 			$context['view_members'][$row['log_time'] . $row['member_name']] = array(
 				'id' => $row['id_member'],
@@ -246,7 +246,7 @@ function MessageIndex()
 				'name' => $row['real_name'],
 				'group' => $row['id_group'],
 				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
-				'link' => $link,
+				'link' => $lastPostLink,
 				'is_buddy' => $is_buddy,
 				'hidden' => empty($row['show_online']),
 			);
@@ -343,6 +343,10 @@ function MessageIndex()
 		LIMIT {int:maxindex}
 			OFFSET {int:start} ';
 
+	if ($user_info['ignoreusers_hide_topics'])
+	{
+		$message_index_wheres[] = 'mf.id_member NOT IN ({array_int:ignore_users})';
+	}
 	$result = $smcFunc['db_query']('substring', '
 		SELECT
 			t.id_topic, t.num_replies, t.locked, t.num_views, t.is_sticky, t.id_poll, t.id_previous_board,
@@ -362,7 +366,7 @@ function MessageIndex()
 			' . (!empty($message_index_selects) ? (', ' . implode(', ', $message_index_selects)) : '') . '
 		FROM (' . $sort_table . ') as st
 			JOIN {db_prefix}topics AS t ON (st.id_topic = t.id_topic)
-			JOIN {db_prefix}messages AS ml ON (ml.id_topic = st.id_topic)
+			JOIN {db_prefix}messages AS ml ON (ml.id_msg = st.id_last_msg)
 			JOIN {db_prefix}messages AS mf ON (mf.id_msg = st.id_first_msg)
 			LEFT JOIN {db_prefix}members AS meml ON (meml.id_member = ml.id_member)
 			LEFT JOIN {db_prefix}members AS memf ON (memf.id_member = mf.id_member)' . (!empty($settings['avatars_on_indexes']) ? '
@@ -370,11 +374,8 @@ function MessageIndex()
 			LEFT JOIN {db_prefix}attachments AS al ON (al.id_member = meml.id_member)' : '') . '' . ($user_info['is_guest'] ? '' : '
 			LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = {int:current_member})
 			LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = {int:current_board} AND lmr.id_member = {int:current_member})') . '
-			WHERE 1=1
 			' . (!empty($message_index_tables) ? implode("\n\t\t\t\t", $message_index_tables) : '') . '
-			' . (!empty($message_index_wheres) ? ' AND ' . implode("\n\t\t\t\tAND ", $message_index_wheres) : '') . '
-			' . ($user_info['ignoreusers_hide_posts'] ? ' AND ml.id_member NOT IN ({array_int:ignore_users})' : '') . '
-			' . ($user_info['ignoreusers_hide_topics'] ? ' AND mf.id_member NOT IN ({array_int:ignore_users})' : '') . '
+			' . (!empty($message_index_wheres) ? ' WHERE ' . implode("\n\t\t\t\tAND ", $message_index_wheres) : '') . '
 		ORDER BY is_sticky' . ($fake_ascending ? '' : ' DESC') . ', ' . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . ', ml.id_msg DESC',
 		$message_index_parameters
 	);
@@ -480,70 +481,73 @@ censorText($row['first_subject']);
 		if ($row['locked'])
 			$colorClass .= ' locked';
 
-		if(!isset($context['topics'][$row['id_topic']]) || $context['topics'][$row['id_topic']]['last_post']['id'] < $row['id_last_msg'])
-		{
-			$threadTags = makeThreadTags($row['last_subject']);
-			$link = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . ($user_info['is_guest'] ? ('.' . (!empty($options['view_newest_first']) ? 0 : ((int) (($row['num_replies']) / $context['pageindex_multiplier'])) * $context['pageindex_multiplier']) . '#msg' . $row['id_last_msg']) : (($row['num_replies'] == 0 ? '.0' : '.msg' . $row['id_last_msg']) . '#new')) . '" ' . ($row['num_replies'] == 0 ? '' : 'rel="nofollow"') . '>' . $threadTags[0] . '</a>' . $threadTags[1];
-			$context['topics'][$row['id_topic']] = array_merge($row, array(
-				'id' => $row['id_topic'],
-				'first_post' => array(
-					'id' => $row['id_first_msg'],
-					'member' => array(
-						'username' => $row['first_member_name'],
-						'name' => $row['first_display_name'],
-						'id' => $row['first_id_member'],
-						'href' => !empty($row['first_id_member']) ? $scripturl . '?action=profile;u=' . $row['first_id_member'] : '',
-						'link' => !empty($row['first_id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['first_id_member'] . '" title="' . sprintf($txt['view_profile_of_username'], $row['first_display_name']) . '" class="preview group-' . $row['first_member_group'] . '">' . $row['first_display_name'] . '</a>' : $row['first_display_name']
-					),
-					'time' => timeformat($row['first_poster_time']),
-					'timestamp' => $row['first_poster_time'],
-					'subject' => $row['first_subject'],
-					'preview' => $row['first_body'],
-					'icon' => $row['first_icon'],
-					'icon_url' => $settings[$context['icon_sources'][$row['first_icon']]] . '/post/' . $row['first_icon'] . '.png',
-					'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
-					'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['first_subject'] . '</a>',
+		$threadTags = makeThreadTags($row['last_subject']);
+		$lastPostLink = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . ($user_info['is_guest'] ? ('.' . (!empty($options['view_newest_first']) ? 0 : ((int) (($row['num_replies']) / $context['pageindex_multiplier'])) * $context['pageindex_multiplier']) . '#msg' . $row['id_last_msg']) : (($row['num_replies'] == 0 ? '.0' : '.msg' . $row['id_last_msg']) . '#new')) . '" ' . ($row['num_replies'] == 0 ? '' : 'rel="nofollow"') . '>' . $threadTags[0] . '</a>' . $threadTags[1];
+		$isLastPosterMember = !empty($row['last_id_member']);
+		$isLastPosterIgnored = $isLastPosterMember && $user_info['ignoreusers_hide_posts'] && in_array($row['last_id_member'], $user_info['ignoreusers']);
+		$context['topics'][$row['id_topic']] = array_merge($row, array(
+			'id' => $row['id_topic'],
+			'first_post' => array(
+				'id' => $row['id_first_msg'],
+				'member' => array(
+					'username' => $row['first_member_name'],
+					'name' => $row['first_display_name'],
+					'id' => $row['first_id_member'],
+					'href' => !empty($row['first_id_member']) ? $scripturl . '?action=profile;u=' . $row['first_id_member'] : '',
+					'link' => !empty($row['first_id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['first_id_member'] . '" title="' . sprintf($txt['view_profile_of_username'], $row['first_display_name']) . '" class="preview group-' . $row['first_member_group'] . '">' . $row['first_display_name'] . '</a>' : $row['first_display_name']
 				),
-				'last_post' => array(
-					'id' => $row['id_last_msg'],
-					'member' => array(
-						'username' => $row['last_display_name'],
-						'name' => $row['last_display_name'],
-						'id' => $row['last_id_member'],
-						'href' => !empty($row['last_id_member']) ? $scripturl . '?action=profile;u=' . $row['last_id_member'] : '',
-						'link' => !empty($row['last_id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['last_id_member'] . '" class="group-' . $row['last_member_group'] . '">' . $row['last_display_name'] . '</a>' : $row['last_display_name']
-					),
-					'time' => timeformat($row['last_poster_time']),
-					'timestamp' => $row['last_poster_time'],
-					'subject' => $row['last_subject'],
-					'preview' => $row['last_body'],
-					'icon' => $row['last_icon'],
-					'icon_url' => $settings[$context['icon_sources'][$row['last_icon']]] . '/post/' . $row['last_icon'] . '.png',
-					'href' => $scripturl . '?topic=' . $row['id_topic'] . ($user_info['is_guest'] ? ('.' . (!empty($options['view_newest_first']) ? 0 : ((int) (($row['num_replies']) / $context['pageindex_multiplier'])) * $context['pageindex_multiplier']) . '#msg' . $row['id_last_msg']) : (($row['num_replies'] == 0 ? '.0' : '.msg' . $row['id_last_msg']) . '#new')),
-					'link' => $link,
-				),
-				'is_sticky' => !empty($row['is_sticky']),
-				'is_locked' => !empty($row['locked']),
-				'is_redirect' => !empty($row['id_redirect_topic']),
-				'is_poll' => $modSettings['pollMode'] == '1' && $row['id_poll'] > 0,
-				'is_posted_in' => ($enableParticipation ? $row['is_posted_in'] : false),
-				'is_watched' => false,
+				'time' => timeformat($row['first_poster_time']),
+				'timestamp' => $row['first_poster_time'],
+				'subject' => $row['first_subject'],
+				'preview' => $row['first_body'],
 				'icon' => $row['first_icon'],
 				'icon_url' => $settings[$context['icon_sources'][$row['first_icon']]] . '/post/' . $row['first_icon'] . '.png',
-				'subject' => $row['first_subject'],
-				'new' => $row['new_from'] <= $row['id_msg_modified'],
-				'new_from' => $row['new_from'],
-				'newtime' => $row['new_from'],
-				'new_href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['new_from'] . '#new',
-				'pages' => $pages,
-				'replies' => comma_format($row['num_replies']),
-				'views' => comma_format($row['num_views']),
-				'approved' => $row['approved'],
-				'unapproved_posts' => $row['unapproved_posts'],
-				'description' => $row['description'],
-				'css_class' => $colorClass,
-			));
-		}
+				'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
+				'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['first_subject'] . '</a>',
+			),
+			'last_post' => array(
+				'id' => $row['id_last_msg'],
+				'member' => array(
+					'username' => $row['last_display_name'],
+					'name' => $row['last_display_name'],
+					'id' => $row['last_id_member'],
+					'href' => $isLastPosterMember ? $scripturl . '?action=profile;u=' . $row['last_id_member'] : '',
+					'link' => $isLastPosterMember ?
+						$isLastPosterIgnored ?
+							'[Ignored user]' :
+							'<a href="' . $scripturl . '?action=profile;u=' . $row['last_id_member'] . '" class="group-' . $row['last_member_group'] . '">' . $row['last_display_name'] . '</a>' :
+						$row['last_display_name']
+				),
+				'time' => timeformat($row['last_poster_time']),
+				'timestamp' => $row['last_poster_time'],
+				'subject' => $row['last_subject'],
+				'preview' => $row['last_body'],
+				'icon' => $row['last_icon'],
+				'icon_url' => $settings[$context['icon_sources'][$row['last_icon']]] . '/post/' . $row['last_icon'] . '.png',
+				'href' => $scripturl . '?topic=' . $row['id_topic'] . ($user_info['is_guest'] ? ('.' . (!empty($options['view_newest_first']) ? 0 : ((int) (($row['num_replies']) / $context['pageindex_multiplier'])) * $context['pageindex_multiplier']) . '#msg' . $row['id_last_msg']) : (($row['num_replies'] == 0 ? '.0' : '.msg' . $row['id_last_msg']) . '#new')),
+				'link' => $lastPostLink,
+			),
+			'is_sticky' => !empty($row['is_sticky']),
+			'is_locked' => !empty($row['locked']),
+			'is_redirect' => !empty($row['id_redirect_topic']),
+			'is_poll' => $modSettings['pollMode'] == '1' && $row['id_poll'] > 0,
+			'is_posted_in' => ($enableParticipation ? $row['is_posted_in'] : false),
+			'is_watched' => false,
+			'icon' => $row['first_icon'],
+			'icon_url' => $settings[$context['icon_sources'][$row['first_icon']]] . '/post/' . $row['first_icon'] . '.png',
+			'subject' => $row['first_subject'],
+			'new' => $row['new_from'] <= $row['id_msg_modified'],
+			'new_from' => $row['new_from'],
+			'newtime' => $row['new_from'],
+			'new_href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['new_from'] . '#new',
+			'pages' => $pages,
+			'replies' => comma_format($row['num_replies']),
+			'views' => comma_format($row['num_views']),
+			'approved' => $row['approved'],
+			'unapproved_posts' => $row['unapproved_posts'],
+			'description' => $row['description'],
+			'css_class' => $colorClass,
+		));
 
 		if (!empty($settings['avatars_on_indexes']))
 		{
