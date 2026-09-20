@@ -44,6 +44,8 @@
 .bbc_table {
 	font: inherit;
 	color: inherit;
+	width: 100%;
+	word-break: break-word;
 }
 .lefttext .bbc_table,
 .centertext .bbc_table {
