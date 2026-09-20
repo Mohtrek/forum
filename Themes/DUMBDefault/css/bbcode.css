@@ -48,11 +48,19 @@
 	word-break: break-word;
 }
 .lefttext .bbc_table,
-.centertext .bbc_table {
+.lefttext .txtbox,
+.lefttext .utxtbox,
+.centertext .bbc_table,
+.centertext .txtbox,
+.centertext .utxtbox {
 	margin-right: auto;
 }
 .righttext .bbc_table,
-.centertext .bbc_table {
+.righttext .txtbox,
+.righttext .utxtbox,
+.centertext .bbc_table,
+.centertext .txtbox,
+.centertext .utxtbox {
 	margin-left: auto;
 }
 .bbc_table td {
