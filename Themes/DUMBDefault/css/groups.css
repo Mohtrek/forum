@@ -6,6 +6,7 @@
 	--joker-color: linear-gradient(90deg, #c3f94b 25%, #7f7fff 30%, #7f7fff 50%, #c3f94b 55%, #c3f94b 75%, #7f7fff 80%, #7f7fff 100%);
 	--blazer-color: #8dedfe;
 	--forecaster-color: linear-gradient(90deg, rgba(242, 200, 90, 1) 13%, rgba(204, 254, 255, 1) 55%, rgba(148, 188, 241, 1) 87%);;
+	--snowcaster-color: #96f1ff;
 }
 
 body.color-scheme-light, body.color-scheme-os {
@@ -16,6 +17,7 @@ body.color-scheme-light, body.color-scheme-os {
 	--joker-color: linear-gradient(90deg, #88c500 25%, #7f7fff 30%, #7f7fff 50%, #88c500 55%, #88c500 75%, #7f7fff 80%, #7f7fff 100%);
 	--blazer-color: #57c4cb;
 	--forecaster-color: linear-gradient(90deg, rgb(218, 166, 31) 25%, rgb(31, 184, 187) 55%, rgb(116, 171, 245) 100%);
+	--snowcaster-color: #0293FD;
 }
 
 span[class*="group-"], a[class*="group-"], a[class*="group-"]:visited {
@@ -192,7 +194,7 @@ span.group-45, a.group-45, a.group-45:visited {
 
 /* Snowcaster */
 span.group-51, a.group-51, a.group-51:visited {
-	color: #96f1ff;
+	color: var(--snowcaster-color);
 }
 
 /* Frostmancer */

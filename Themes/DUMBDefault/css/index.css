@@ -25,6 +25,8 @@
 	--invalid-color: #FF3C3C;
 
 	--ut-icon-filter: hue-rotate(180deg);
+	--background-image: url('/Themes/DUMBDefault/images/background.png');
+	--background-pos: -50px;
 }
 body.color-scheme-light {
 	--transparent-bg: rgba(255,255,255,0.85);
@@ -48,6 +50,8 @@ body.color-scheme-light {
 	--invalid-color: #d50909;
 
 	--ut-icon-filter: hue-rotate(0);
+	--background-image: url('/Themes/DUMBDefault/images/background_light.png');
+	--background-pos: 0;
 }
 @media (prefers-color-scheme: light) {
 	/* Same as the above block */
@@ -73,15 +77,17 @@ body.color-scheme-light {
 		--invalid-color: #d50909;
 
 		--ut-icon-filter: hue-rotate(0);
+		--background-image: url('/Themes/DUMBDefault/images/background_light.png');
+		--background-pos: 0;
 	}
 }
 body {
 	background: black;
-	background-image: url('/Themes/DUMBDefault/images/background.png');
+	background-image: var(--background-image);
 	background-attachment: fixed;
 	background-repeat: repeat-x;
 	background-size: cover;
-	background-position-x: -50px;
+	background-position-x: var(--background-pos);
 	font: 83.33%/150% Verdana, Tahoma, Arial, sans-serif;
 	color: var(--txt-color);
 	display: flex;
