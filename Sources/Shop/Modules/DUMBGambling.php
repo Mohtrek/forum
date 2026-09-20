@@ -155,7 +155,7 @@ class DUMBGambling extends Module
                 DELETE FROM {db_prefix}loottable
                 WHERE ITEM_ID = {int:itemid}
                 AND ID_GRANTING = {int:grantid}
-                AND is_cat = {int:is_cat}',
+                AND is_category = {int:is_cat}',
                 array(
                     'itemid' => $item_id,
                     'grantid' => $grantid,
