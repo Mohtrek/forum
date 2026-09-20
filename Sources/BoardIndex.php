@@ -46,12 +46,15 @@ function BoardIndex()
 		'set_latest_post' => true,
 		'countChildPosts' => !empty($modSettings['countChildPosts']),
 	);
+	profileSpanStart('get_board_index');
 	$context['categories'] = getBoardIndex($boardIndexOptions);
+	profileSpanEnd('get_board_index');
 
 	// Now set up for the info center.
 	$context['info_center'] = array();
 
 	// Retrieve the latest posts if the theme settings require it.
+	profileSpanStart('recent_posts');
 	if (!empty($settings['number_recent_posts']))
 	{
 		if ($settings['number_recent_posts'] > 1)
@@ -68,8 +71,10 @@ function BoardIndex()
 				'txt' => 'recent_posts',
 			);
 	}
+	profileSpanEnd('recent_posts');
 
 	// Load the calendar?
+	profileSpanStart('calendar');
 	if (!empty($modSettings['cal_enabled']) && allowedTo('calendar_view'))
 	{
 		// Retrieve the calendar data (events, birthdays, holidays).
@@ -93,6 +98,7 @@ function BoardIndex()
 				'txt' => $context['calendar_only_today'] ? 'calendar_today' : 'calendar_upcoming',
 			);
 	}
+	profileSpanEnd('calendar');
 
 	// And stats.
 	$context['show_stats'] = allowedTo('view_stats') && !empty($modSettings['trackStats']);
@@ -103,6 +109,7 @@ function BoardIndex()
 		);
 
 	// Now the online stuff
+	profileSpanStart('online');
 	require_once($sourcedir . '/Subs-MembersOnline.php');
 	$membersOnlineOptions = array(
 		'show_hidden' => allowedTo('moderate_forum'),
@@ -116,14 +123,19 @@ function BoardIndex()
 		'tpl' => 'online',
 		'txt' => 'online_users',
 	);
+	profileSpanEnd('online');
 
 	// Track most online statistics? (Subs-MembersOnline.php)
+	profileSpanStart('track_stats');
 	if (!empty($modSettings['trackStats']))
 		trackStatsUsersOnline($context['num_guests'] + $context['num_users_online']);
+	profileSpanEnd('track_stats');
 
 	// Are we showing all membergroups on the board index?
+	profileSpanStart('membergroups');
 	if (!empty($settings['show_group_key']))
 		$context['membergroups'] = cache_quick_get('membergroup_list', 'Subs-Membergroups.php', 'cache_getMembergroupList', array());
+	profileSpanEnd('membergroups');
 
 	// And back to normality.
 	$context['page_title'] = sprintf($txt['forum_index'], $context['forum_name']);
@@ -134,7 +146,9 @@ function BoardIndex()
 		'markread' => array('text' => 'mark_as_read', 'image' => 'markread.png', 'custom' => 'data-confirm="' . $txt['are_sure_mark_read'] . '"', 'class' => 'you_sure', 'url' => $scripturl . '?action=markasread;sa=all;' . $context['session_var'] . '=' . $context['session_id']),
 	);
 
+	profileSpanStart('recent_activity');
 	$context['recent_topics'] = getRecentActivity();
+	profileSpanEnd('recent_activity');
 
 	// Replace the collapse and expand default alts.
 	addJavaScriptVar('smf_expandAlt', $txt['show_category'], true);
