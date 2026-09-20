@@ -8586,17 +8586,16 @@ function getRecentActivity($start_date = 0, $end_date = 0, $limit = 15)
 
 	$start_date = $start_date > 0 ? $start_date : 0;
 	$end_date = $end_date > 0 ? $end_date : time();
-	$topics = [];
 
 	$request = $smcFunc['db_query']('', '
-		SELECT t.id_topic, t.id_member_started, MAX(m.id_msg) AS id_msg
+		SELECT t.id_topic, t.id_member_started, ml.id_msg, mf.icon, mf.subject, ml.id_member, ml.poster_name, ml.poster_time, mem.id_group 
 		FROM {db_prefix}topics AS t
-		JOIN {db_prefix}messages AS m ON m.id_topic = t.id_topic
-		JOIN {db_prefix}members AS mem ON mem.id_member = m.id_member
+		JOIN {db_prefix}messages AS ml ON ml.id_msg = t.id_last_msg
+		JOIN {db_prefix}members AS mem ON mem.id_member = ml.id_member
 		JOIN {db_prefix}messages AS mf ON mf.id_msg = t.id_first_msg
 		LEFT JOIN smf_board_permissions_view bpv ON bpv.id_board = t.id_board AND bpv.id_group = {int:current_group}
-		WHERE m.poster_time BETWEEN {int:start_date} AND {int:end_date}
-		' . ($user_info['ignoreusers_hide_posts'] ? ' AND m.id_member NOT IN ({array_int:ignore_users})' : '') . '
+		WHERE ml.poster_time BETWEEN {int:start_date} AND {int:end_date}
+		' . ($user_info['ignoreusers_hide_posts'] ? ' AND ml.id_member NOT IN ({array_int:ignore_users})' : '') . '
 		' . ($user_info['ignoreusers_hide_topics'] ? ' AND t.id_member_started NOT IN ({array_int:ignore_users})' : '') . '
 		' . ($user_info['is_admin'] ? '' : '
 			AND COALESCE(
@@ -8605,8 +8604,7 @@ function getRecentActivity($start_date = 0, $end_date = 0, $limit = 15)
 				1
 			) = 0
 		') . '
-		GROUP BY t.id_topic, t.id_member_started
-		ORDER BY m.poster_time DESC
+		ORDER BY t.id_last_msg DESC
 		LIMIT {int:limit}',
 		array(
 			'start_date' => $start_date,
@@ -8617,31 +8615,10 @@ function getRecentActivity($start_date = 0, $end_date = 0, $limit = 15)
 		)
 	);
 
-	$msg_ids = [];
-	foreach ($smcFunc['db_fetch_all']($request) as $row) {
-		$msg_ids[] = $row['id_msg'];
-	}
-
-	$request = $smcFunc['db_query']('', '
-		SELECT t.id_topic, t.id_member_started, m.id_msg, m.icon, m.subject, mf.subject AS first_subject, m.id_member, m.poster_name, m.poster_time, mem.id_group 
-		FROM {db_prefix}topics AS t
-		JOIN {db_prefix}messages AS m ON m.id_topic = t.id_topic
-		JOIN {db_prefix}members AS mem ON mem.id_member = m.id_member
-		JOIN {db_prefix}messages AS mf ON mf.id_msg = t.id_first_msg
-		LEFT JOIN smf_board_permissions_view bpv ON bpv.id_board = t.id_board AND bpv.id_group = {int:current_group}
-		WHERE m.id_msg IN ({array_int:msg_ids})
-		ORDER BY m.poster_time DESC',
-		array(
-			'msg_ids' => !empty($msg_ids) ? $msg_ids : [-1],
-			'current_group' => ($user_info['groups'] ?? [])[0] ?? 0,
-			'limit' => $limit,
-		)
-	);
-
+	$topics = [];
 	foreach ($smcFunc['db_fetch_all']($request) as $row) {
 		$topics[$row['id_topic']] = $row;
 	}
-
 	return $topics;
 }
 

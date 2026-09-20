@@ -388,11 +388,11 @@ function template_recent_activity()
 	{
 		echo '<div class="topic_grid windowbg_recent">',
 		'<div class="board_icon">', '<img src="', $settings['actual_images_url'], '/post/', htmlspecialchars($topic['icon']), '.png">', '</div>';
-		$threadTags = makeThreadTags($topic['first_subject']);
-		$topic['first_subject'] = $threadTags[0] . ' ' . $threadTags[1];
+		$threadTags = makeThreadTags($topic['subject']);
+		$topic['subject'] = $threadTags[0] . ' ' . $threadTags[1];
 		echo '<div class="info info_block"><div class="message_index_title">',
 		'<a href="', $scripturl, '?topic=', $topic['id_topic'], '.msg', $topic['id_msg'], '#new">',
-		$topic['first_subject'],
+		$topic['subject'],
 		'</a> - by ',
 		'<a href="', $scripturl, '?action=profile;u=', $topic['id_member'], '" class="group-', $topic['id_group'], '">', htmlspecialchars($topic['poster_name']), '</a>',
 		'</div></div>',
