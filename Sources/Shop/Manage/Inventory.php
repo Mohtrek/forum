@@ -431,7 +431,7 @@ class Inventory extends Dashboard
 		$context['template_layers'][] = 'send';
 
 		// List of items
-		$context['shop_items_list'] = Database::Get(0, 100000, 's.name', 'stshop_items AS s', Database::$items, 'WHERE s.status = 1 AND s.stock > 0');
+		$context['shop_items_list'] = Database::Get(0, 100000, 's.name', 'stshop_items AS s', Database::$items, 'WHERE s.status = 1');
 
 		// Load suggest.js
 		loadJavaScriptFile('suggest.js', ['default_theme' => true, 'defer' => false, 'minimize' => true], 'smf_suggest');
@@ -460,7 +460,7 @@ class Inventory extends Dashboard
 		$member_parameters = [];
 
 		// Get item info
-		$item_info = Database::Get('', '', '', 'stshop_items AS s', Database::$items, 'WHERE s.itemid = {int:id} AND s.stock > 0', true, '', ['id' => $item]);
+		$item_info = Database::Get('', '', '', 'stshop_items AS s', Database::$items, 'WHERE s.itemid = {int:id}', true, '', ['id' => $item]);
 
 		// That item available and didn't empty it's stock?
 		if (empty($item_info))
@@ -516,10 +516,6 @@ class Inventory extends Dashboard
 				// Tidy up
 				foreach ($receivers as $key => $memID)
 					$members[$key] = $memID['id_member'];
-
-				// Check the item info
-				if ($item_info['stock'] < count($members))
-					fatal_error(Shop::getText('inventory_useritems_nostock'), false);
 
 				// Handle everything
 				$this->_log->items($user_info['id'], $members, $item_info['itemid'], 0, true);

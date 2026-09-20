@@ -157,7 +157,6 @@ class Log
 				];
 			}
 			Database::Insert('stshop_inventory', $this->_insert_rows, $this->_inventory);
-			Database::Update('stshop_items', ['stock' => count($users), 'itemid' => $item], 'stock = stock - {int:stock}', 'WHERE itemid = {int:itemid}');
 		}
 	}
 
