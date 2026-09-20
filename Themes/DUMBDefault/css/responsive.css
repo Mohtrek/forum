@@ -73,6 +73,9 @@
 		width: calc(100% - 90px);
 		max-width: unset;
 	}
+}
+
+@media (min-width: 720px) {
 	#preview_section {
 		position: relative;
 	}
