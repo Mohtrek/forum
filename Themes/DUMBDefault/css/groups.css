@@ -197,7 +197,7 @@ span.group-59, a.group-59, a.group-59:visited {
 }
 
 /* Forecaster */
-span.group-34, a.group-34:visited, span.group-35, a.group-35:visited {
+span.group-34, a.group-34, a.group-34:visited, span.group-35, a.group-35, a.group-35:visited {
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
