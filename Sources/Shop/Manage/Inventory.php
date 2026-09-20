@@ -522,7 +522,7 @@ class Inventory extends Dashboard
 
 				// Deploy alert?
 				if (!empty($modSettings['Shop_noty_items']))
-					$this->_notify->alert($members, 'items', $user_info['id'], ['shop_href' => '?action=shop;sa=inventory', 'item_icon' => 'top_gifts_r']);
+					$this->_notify->alert($members, 'items', $user_info['id'], ['shop_href' => ';sa=inventory', 'item_icon' => 'top_gifts_r']);
 
 				// Redirect to a nice message of success
 				redirectexit('action=admin;area=shopinventory;sa=useritems;updated');
