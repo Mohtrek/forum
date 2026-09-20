@@ -162,7 +162,7 @@ span[style="color: purple;"] {
     content: ""
 }
 
-.bbc_standard_quote div {
+.bbc_standard_quote > div {
     color: var(--txt-color-off);
     border-left: 1px var(--ter-bg-color) solid;
     border-top: 1px var(--ter-bg-color) solid;
