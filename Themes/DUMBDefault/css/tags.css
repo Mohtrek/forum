@@ -260,3 +260,14 @@ a.tag-burger:visited {
 	padding: 5px;
 	border:black;
 }
+
+a.tag-fan-fiction, 
+a.tag-fan-fiction:visited ,
+a.tag-writing, 
+a.tag-writing:visited , 
+a.tag-comic,
+a.tag-comic:visited {
+    color: black;
+ background: #bab3ff;
+background: linear-gradient(0deg,rgba(186, 179, 255, 1) 3%, rgba(97, 97, 252, 1) 64%, rgba(255, 255, 255, 1) 100%);
+}
