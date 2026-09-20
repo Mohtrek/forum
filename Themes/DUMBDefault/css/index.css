@@ -30,7 +30,7 @@ body.color-scheme-light {
 	--transparent-bg: rgba(255,255,255,0.85);
 	--pri-bg-color: #e9e9e9;
 	--sec-bg-color: #c3c3c3;
-	--ter-bg-color: #535353;
+	--ter-bg-color: #B0B0B0;
 	--txt-color: #3b3b3b;
 	--txt-color-off: #3b3b3b85;
 	--skeuomorphism-end-color: #b9b9b9;
@@ -2930,20 +2930,20 @@ tr.windowbg:hover a:visited {
 }
 /* Nobody wants locked topics to stand out much. */
 .windowbg.locked {
-	background: var(--ter-bg-color);
+	background: var(--sec-bg-color);
 }
 /* Sticky topics get a different background */
 /* Locked AND sticky are a bit more technical */
 .windowbg.sticky.locked {
-	background: var(--ter-bg-color);
+	background: var(--sec-bg-color);
 }
 /* Awaiting approval is a bit special, topics first */
 .windowbg.approvetopic {
-	background: var(--ter-bg-color);
+	background: var(--sec-bg-color);
 }
 /* Unapproved posts in approved topics */
 .windowbg.approvepost {
-	background: var(--ter-bg-color);
+	background: var(--sec-bg-color);
 }
 .generic_list_wrapper .additional_row {
 	margin: 0;
