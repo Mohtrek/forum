@@ -1,6 +1,12 @@
 (function() {
 	'use strict';
 
+	function smoothImage(img) {
+		if (img.naturalWidth >= 800 || img.naturalHeight >= 600) {
+			img.classList.add('smooth');
+		}
+	}
+
 	function apply(root) {
 		if (root.nodeType !== Node.ELEMENT_NODE) {
 			return;
@@ -17,8 +23,10 @@
 			el.style.textShadow = `0 0 2px ${color}, 0 0 6px ${color}`;
 		}
 		for (const img of queryEl.getElementsByTagName('img')) {
-			if (img.naturalWidth >= 800 || img.naturalHeight >= 600) {
-				img.classList.add('smooth');
+			if (img.complete) {
+				smoothImage(img);
+			} else {
+				img.addEventListener('load', () => smoothImage(img));
 			}
 		}
 	}
