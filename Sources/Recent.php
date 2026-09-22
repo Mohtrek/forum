@@ -1347,6 +1347,8 @@ function UnreadTopics()
 		$lastPostLink = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . ($row['num_replies'] == 0 ? '.0' : '.msg' . $row['id_last_msg']) . ';topicseen#msg' . $row['id_last_msg'] . '" rel="nofollow">' . $threadTags[0] . '</a>' . $threadTags[1];
 		$isLastPosterMember = !empty($row['id_last_member']);
 		$isLastPosterIgnored = $isLastPosterMember && $user_info['ignoreusers_hide_posts'] && in_array($row['id_last_member'], $user_info['ignoreusers']);
+		$threadTagsFirst = makeThreadTags($row['first_subject']);
+		$firstPostLink = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0;topicseen">' . $threadTagsFirst[0] . '</a>' . $threadTagsFirst[1];
 		$context['topics'][$row['id_topic']] = array(
 			'id' => $row['id_topic'],
 			'first_post' => array(
@@ -1364,7 +1366,7 @@ function UnreadTopics()
 				'icon' => $row['first_icon'],
 				'icon_url' => $settings[$context['icon_sources'][$row['first_icon']]] . '/post/' . $row['first_icon'] . '.png',
 				'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0;topicseen',
-				'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0;topicseen">' . $row['first_subject'] . '</a>'
+				'link' => $firstPostLink,
 			),
 			'last_post' => array(
 				'id' => $row['id_last_msg'],
