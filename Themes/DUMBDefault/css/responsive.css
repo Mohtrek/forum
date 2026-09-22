@@ -383,6 +383,8 @@
 		float: none;
 		width: auto;
 		position: relative;
+		grid-template-columns: 1fr 1fr;
+		word-wrap: anywhere;
 	}
 	.postarea, .moderatorbar {
 		border-left: 0;
