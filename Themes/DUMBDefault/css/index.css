@@ -24,6 +24,7 @@
 	--valid-color: #25FA67;
 	--invalid-color: #FF3C3C;
 
+	--invert-on-dark: invert(1);
 	--ut-icon-filter: hue-rotate(180deg);
 	--background-image: url('/Themes/DUMBDefault/images/background.png');
 	--background-pos: -50px;
@@ -49,6 +50,7 @@ body.color-scheme-light {
 	--valid-color: #03be25;
 	--invalid-color: #d50909;
 
+	--invert-on-dark: none;
 	--ut-icon-filter: hue-rotate(0);
 	--background-image: url('/Themes/DUMBDefault/images/background_light.png');
 	--background-pos: 0;
@@ -76,6 +78,7 @@ body.color-scheme-light {
 		--valid-color: #03be25;
 		--invalid-color: #d50909;
 
+		--invert-on-dark: none;
 		--ut-icon-filter: hue-rotate(0);
 		--background-image: url('/Themes/DUMBDefault/images/background_light.png');
 		--background-pos: 0;
