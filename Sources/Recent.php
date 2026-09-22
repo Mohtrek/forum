@@ -1343,6 +1343,10 @@ function UnreadTopics()
 			$colorClass .= ' locked';
 
 		// And build the array.
+		$threadTags = makeThreadTags($row['last_subject']);
+		$lastPostLink = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . ($row['num_replies'] == 0 ? '.0' : '.msg' . $row['id_last_msg']) . ';topicseen#msg' . $row['id_last_msg'] . '" rel="nofollow">' . $threadTags[0] . '</a>' . $threadTags[1];
+		$isLastPosterMember = !empty($row['id_last_member']);
+		$isLastPosterIgnored = $isLastPosterMember && $user_info['ignoreusers_hide_posts'] && in_array($row['id_last_member'], $user_info['ignoreusers']);
 		$context['topics'][$row['id_topic']] = array(
 			'id' => $row['id_topic'],
 			'first_post' => array(
@@ -1367,8 +1371,12 @@ function UnreadTopics()
 				'member' => array(
 					'name' => $row['last_poster_name'],
 					'id' => $row['id_last_member'],
-					'href' => $scripturl . '?action=profile;u=' . $row['id_last_member'],
-					'link' => !empty($row['id_last_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_last_member'] . '" class="group' . $row['last_poster_group'] . '">' . $row['last_poster_name'] . '</a>' : $row['last_poster_name']
+					'href' => $isLastPosterMember ? $scripturl . '?action=profile;u=' . $row['id_last_member'] : '',
+					'link' => $isLastPosterMember ?
+						$isLastPosterIgnored ?
+							'[Ignored user]' :
+							'<a href="' . $scripturl . '?action=profile;u=' . $row['id_last_member'] . '" class="group' . $row['last_poster_group'] . '">' . $row['last_poster_name'] . '</a>' :
+						$row['last_poster_name']
 				),
 				'time' => timeformat($row['last_poster_time']),
 				'timestamp' => $row['last_poster_time'],
