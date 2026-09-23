@@ -244,8 +244,8 @@ function template_main()
 	if (!empty($context['normal_buttons']))
 		echo '
 		<div class="mobile_buttons floatright">
-			<a class="button mobile_act">', $txt['mobile_action'], '</a>
 			', !empty($context['mod_buttons']) ? '<a class="button mobile_mod">' . $txt['mobile_moderation'] . '</a>' : '', '
+			<a class="button mobile_act">', $txt['mobile_action'], '</a>
 		</div>';
 
 	echo '
@@ -281,8 +281,8 @@ function template_main()
 	if (!empty($context['normal_buttons']))
 		echo '
 		<div class="mobile_buttons floatright">
-			<a class="button mobile_act">', $txt['mobile_action'], '</a>
 			', !empty($context['mod_buttons']) ? '<a class="button mobile_mod">' . $txt['mobile_moderation'] . '</a>' : '', '
+			<a class="button mobile_act">', $txt['mobile_action'], '</a>
 		</div>';
 
 	echo '
