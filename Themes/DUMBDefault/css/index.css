@@ -24,6 +24,7 @@
 	--valid-color: #25FA67;
 	--invalid-color: #FF3C3C;
 
+	--invert-on-dark: invert(1);
 	--ut-icon-filter: hue-rotate(180deg);
 	--background-image: url('/Themes/DUMBDefault/images/background.png');
 	--background-pos: -50px;
@@ -49,6 +50,7 @@ body.color-scheme-light {
 	--valid-color: #03be25;
 	--invalid-color: #d50909;
 
+	--invert-on-dark: none;
 	--ut-icon-filter: hue-rotate(0);
 	--background-image: url('/Themes/DUMBDefault/images/background_light.png');
 	--background-pos: 0;
@@ -76,6 +78,7 @@ body.color-scheme-light {
 		--valid-color: #03be25;
 		--invalid-color: #d50909;
 
+		--invert-on-dark: none;
 		--ut-icon-filter: hue-rotate(0);
 		--background-image: url('/Themes/DUMBDefault/images/background_light.png');
 		--background-pos: 0;
@@ -4384,4 +4387,32 @@ img.theme_thumbnail {
 	align-self: center;
 	flex: 0 0 auto;
 	padding: 1px;
+}
+
+img[src*="NPC_SING_BLANK.png"] {
+	width: 16px;
+	height: 16px;
+	padding: 0px;
+	background-image: url("https://deltaruneboards.net/assets/items/ENEMY_SILENT.png");
+}
+	
+img[src*="NPC_SING_BLANK.png"]:hover {
+	width: 16px;
+	height: 16px;
+	padding: 0px;
+	background-image: url("https://deltaruneboards.net/assets/items/ENEMY_SILENT_2.png");
+}
+	
+img[src*="NPC_CACTUS_BLANK.png"] {
+	width: 14px;
+	height: 16px;
+	padding: 0px;
+	background-image: url("https://deltaruneboards.net/assets/items/NPC_CACTUS.png");
+}
+	
+img[src*="NPC_CACTUS_BLANK.png"]:hover {
+	width: 14px;
+	height: 16px;
+	padding: 0px;
+	background-image: url("https://deltaruneboards.net/assets/items/NPC_CACTUS_1.png");
 }

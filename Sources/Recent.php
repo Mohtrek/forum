@@ -1343,6 +1343,12 @@ function UnreadTopics()
 			$colorClass .= ' locked';
 
 		// And build the array.
+		$threadTags = makeThreadTags($row['last_subject']);
+		$lastPostLink = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . ($row['num_replies'] == 0 ? '.0' : '.msg' . $row['id_last_msg']) . ';topicseen#msg' . $row['id_last_msg'] . '" rel="nofollow">' . $threadTags[0] . '</a>' . $threadTags[1];
+		$isLastPosterMember = !empty($row['id_last_member']);
+		$isLastPosterIgnored = $isLastPosterMember && $user_info['ignoreusers_hide_posts'] && in_array($row['id_last_member'], $user_info['ignoreusers']);
+		$threadTagsFirst = makeThreadTags($row['first_subject']);
+		$firstPostLink = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0;topicseen">' . $threadTagsFirst[0] . '</a>' . $threadTagsFirst[1];
 		$context['topics'][$row['id_topic']] = array(
 			'id' => $row['id_topic'],
 			'first_post' => array(
@@ -1360,15 +1366,19 @@ function UnreadTopics()
 				'icon' => $row['first_icon'],
 				'icon_url' => $settings[$context['icon_sources'][$row['first_icon']]] . '/post/' . $row['first_icon'] . '.png',
 				'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0;topicseen',
-				'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0;topicseen">' . $row['first_subject'] . '</a>'
+				'link' => $firstPostLink,
 			),
 			'last_post' => array(
 				'id' => $row['id_last_msg'],
 				'member' => array(
 					'name' => $row['last_poster_name'],
 					'id' => $row['id_last_member'],
-					'href' => $scripturl . '?action=profile;u=' . $row['id_last_member'],
-					'link' => !empty($row['id_last_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_last_member'] . '" class="group' . $row['last_poster_group'] . '">' . $row['last_poster_name'] . '</a>' : $row['last_poster_name']
+					'href' => $isLastPosterMember ? $scripturl . '?action=profile;u=' . $row['id_last_member'] : '',
+					'link' => $isLastPosterMember ?
+						$isLastPosterIgnored ?
+							'[Ignored user]' :
+							'<a href="' . $scripturl . '?action=profile;u=' . $row['id_last_member'] . '" class="group' . $row['last_poster_group'] . '">' . $row['last_poster_name'] . '</a>' :
+						$row['last_poster_name']
 				),
 				'time' => timeformat($row['last_poster_time']),
 				'timestamp' => $row['last_poster_time'],
@@ -1377,7 +1387,7 @@ function UnreadTopics()
 				'icon' => $row['last_icon'],
 				'icon_url' => $settings[$context['icon_sources'][$row['last_icon']]] . '/post/' . $row['last_icon'] . '.png',
 				'href' => $scripturl . '?topic=' . $row['id_topic'] . ($row['num_replies'] == 0 ? '.0' : '.msg' . $row['id_last_msg']) . ';topicseen#msg' . $row['id_last_msg'],
-				'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . ($row['num_replies'] == 0 ? '.0' : '.msg' . $row['id_last_msg']) . ';topicseen#msg' . $row['id_last_msg'] . '" rel="nofollow">' . $row['last_subject'] . '</a>'
+				'link' => $lastPostLink,
 			),
 			'new_from' => $row['new_from'],
 			'new_href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['new_from'] . ';topicseen#new',

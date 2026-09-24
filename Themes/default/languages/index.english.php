@@ -510,7 +510,7 @@ $txt['cache_writable'] = 'The cache directory is not writable - this will advers
 
 $txt['page_created_full'] = 'Page created in %1$.3f seconds with %2$d queries.';
 
-$txt['report_to_mod_func'] = 'Use this function to inform the moderators and administrators of an abusive or problematic message.';
+$txt['report_to_mod_func'] = 'Use this function to bring a message to moderators\' attention. You can use it for a variety of reasons, such as reporting content that breaks the rules, flagging a thread that needs moving to another board, etc. You will not be punished for using this feature unless you are deliberately spamming reports.';
 $txt['report_profile_func'] = 'Use this function to inform the administrators of abusive profile content, such as spam or inappropriate images.';
 
 $txt['online'] = 'Online';

@@ -485,6 +485,8 @@ censorText($row['first_subject']);
 		$lastPostLink = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . ($user_info['is_guest'] ? ('.' . (!empty($options['view_newest_first']) ? 0 : ((int) (($row['num_replies']) / $context['pageindex_multiplier'])) * $context['pageindex_multiplier']) . '#msg' . $row['id_last_msg']) : (($row['num_replies'] == 0 ? '.0' : '.msg' . $row['id_last_msg']) . '#new')) . '" ' . ($row['num_replies'] == 0 ? '' : 'rel="nofollow"') . '>' . $threadTags[0] . '</a>' . $threadTags[1];
 		$isLastPosterMember = !empty($row['last_id_member']);
 		$isLastPosterIgnored = $isLastPosterMember && $user_info['ignoreusers_hide_posts'] && in_array($row['last_id_member'], $user_info['ignoreusers']);
+		$threadTagsFirst = makeThreadTags($row['first_subject']);
+		$firstPostLink = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $threadTagsFirst[0] . '</a>' . $threadTagsFirst[1];
 		$context['topics'][$row['id_topic']] = array_merge($row, array(
 			'id' => $row['id_topic'],
 			'first_post' => array(
@@ -503,7 +505,7 @@ censorText($row['first_subject']);
 				'icon' => $row['first_icon'],
 				'icon_url' => $settings[$context['icon_sources'][$row['first_icon']]] . '/post/' . $row['first_icon'] . '.png',
 				'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
-				'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['first_subject'] . '</a>',
+				'link' => $firstPostLink,
 			),
 			'last_post' => array(
 				'id' => $row['id_last_msg'],
