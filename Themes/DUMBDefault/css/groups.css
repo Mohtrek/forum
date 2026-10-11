@@ -45,7 +45,7 @@ span.group-2, a.group-2, a.group-2:visited, span.group-3, a.group-3, a.group-3:v
 }
 
 /* Bed Inspector */
-a.group-26, a.group-26:visited {
+span.group-26, a.group-26, a.group-26:visited {
 	color: black;
 	-webkit-text-stroke: 3px white;
 	font-family: serif;
