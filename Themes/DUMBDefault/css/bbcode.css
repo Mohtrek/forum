@@ -241,6 +241,10 @@ blockquote[style="overflow-y: hidden; max-height: 300px;"] a.expand {
 	z-index: 1;
 }
 
+blockquote[style="overflow-y: hidden; max-height: 300px;"] blockquote blockquote div {
+	display: none;
+}
+
 blockquote.bbc_standard_quote blockquote a.expand {
 	display: none;
 }
