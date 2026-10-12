@@ -11,7 +11,7 @@
 	--hover-color: white;
 }
 
-body.color-scheme-light, body.color-scheme-os {
+body.color-scheme-light {
 	--lucky-color: linear-gradient(180deg, rgba(255, 8, 8, 1) 0%, rgba(255, 196, 196, 1) 10%, rgb(0 0 0) 37%, rgba(255, 8, 8, 1) 90%, rgba(87, 23, 23, 1) 100%);
 	--big-shot-color: linear-gradient(180deg, rgb(255, 49, 78) 0%, rgb(255, 46, 203) 10%, rgb(251, 177, 61) 30%, rgb(227, 163, 39) 43%, rgb(255, 78, 161) 63%, rgb(205, 41, 121) 100%);
 	--hopes-dreams-color: linear-gradient(to right, rgb(246, 0, 55), rgb(255, 103, 54), rgb(255, 173, 46), rgb(61, 191, 49), rgb(65, 196, 171), rgb(2, 141, 255), rgb(166, 0, 242));
@@ -22,6 +22,21 @@ body.color-scheme-light, body.color-scheme-os {
 	--snowcaster-color: #0293FD;
 
 	--hover-color: #D5390D;
+}
+
+@media (prefers-color-scheme: light) {
+	body.color-scheme-os {
+		--lucky-color: linear-gradient(180deg, rgba(255, 8, 8, 1) 0%, rgba(255, 196, 196, 1) 10%, rgb(0 0 0) 37%, rgba(255, 8, 8, 1) 90%, rgba(87, 23, 23, 1) 100%);
+		--big-shot-color: linear-gradient(180deg, rgb(255, 49, 78) 0%, rgb(255, 46, 203) 10%, rgb(251, 177, 61) 30%, rgb(227, 163, 39) 43%, rgb(255, 78, 161) 63%, rgb(205, 41, 121) 100%);
+		--hopes-dreams-color: linear-gradient(to right, rgb(246, 0, 55), rgb(255, 103, 54), rgb(255, 173, 46), rgb(61, 191, 49), rgb(65, 196, 171), rgb(2, 141, 255), rgb(166, 0, 242));
+		--ice-trancer-color: linear-gradient(0deg, rgb(44, 34, 50) 0%, rgb(103 90 160) 27%, rgb(130 193 218) 52%, rgb(21 101 171) 78%, rgb(53, 73, 132) 100%);
+		--joker-color: linear-gradient(90deg, #88c500 25%, #7f7fff 30%, #7f7fff 50%, #88c500 55%, #88c500 75%, #7f7fff 80%, #7f7fff 100%);
+		--blazer-color: #57c4cb;
+		--forecaster-color: linear-gradient(90deg, rgb(218, 166, 31) 25%, rgb(31, 184, 187) 55%, rgb(116, 171, 245) 100%);
+		--snowcaster-color: #0293FD;
+
+		--hover-color: #D5390D;
+	}
 }
 
 span[class*="group-"], a[class*="group-"], a[class*="group-"]:visited {
