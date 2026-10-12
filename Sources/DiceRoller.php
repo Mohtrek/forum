@@ -44,8 +44,8 @@ class DiceRoller
 	public static function integrate_bbc_codes(&$codes, &$no_autolink_tags)
 	{
 		$codes[] = [
-			'tag' => 'blockquote',
-			'before' => '<div style="background-color:rgba(255, 255, 255, 0.2); padding: 6px; margin:5px 20px; border:1px dashed black">',
+			'tag' => 'dicerolled',
+			'before' => '<div class="dicerolled">',
 			'after' => '</div>',
 		];
 	}
@@ -57,9 +57,9 @@ class DiceRoller
 
 		$image = $settings['default_theme_url'] . '/diceimages/dice_warn.gif';
 
-		// Remove anyone who posted with the [blockquote] tag, bah, ye cheating riffraff!
-		$message = preg_replace('~\[/blockquote\]~i', '', $message);
-		$message = preg_replace('~\[blockquote[^\]]*\]~i', "[img]{$image}[/img] [color=red][b]{$txt['dice_cheater']}[/b][/color]\n", $message);
+		// Remove anyone who posted with the [dicerolled] tag, bah, ye cheating riffraff!
+		$message = preg_replace('~\[/dicerolled\]~i', '', $message);
+		$message = preg_replace('~\[dicerolled[^\]]*\]~i', "[img]{$image}[/img] [color=red][b]{$txt['dice_cheater']}[/b][/color]\n", $message);
 
 		// roll them dices!
 		$message = preg_replace_callback('~\[roll\]([^\[]*)\[/roll\]~i', 'DiceRoller::dice_roll', $message);
@@ -70,7 +70,7 @@ class DiceRoller
 
 		loadLanguage('DiceRoller/DiceRoller');
 
-		$output = '[blockquote]';
+		$output = '[dicerolled]';
 		$count = preg_match_all('~(\{([^}]+)\})?\s*([0-9]+)d([0-9]+)([\+\-][0-9]+)?(\^[0-9]+)?(v[0-9]+)?(\&lt;[0-9]+)?(\&gt;[0-9]+)?(x[0-9]+)?~i', $string[1], $thisdiceroll);
 		if ($count)
 		{
@@ -189,7 +189,7 @@ class DiceRoller
 		} else {
 			$output .= '\'' . $string[1] . '\' ' . $txt['dice_not_valid'];
 		}
-		$output .= '[/blockquote]';
+		$output .= '[/dicerolled]';
 		return $output;
 	}
 }
