@@ -241,7 +241,7 @@ class Inventory
 							else
 								$message = '<strong>'. Shop::getText('item_notusable'). '</strong>';
 
-                            $message .= '<br><a href="' . $scripturl . '?action=shop;sa=invdel;id=' . $row['id'] . '">' . Shop::getText('item_delete') . '</a>';
+							$message .= '<br><a href="' . $scripturl . '?action=shop;sa=invdel;id=' . $row['id'] . '">' . Shop::getText('item_delete') . '</a>';
 
 							return $message;
 						},
@@ -708,64 +708,43 @@ class Inventory
 		);
 	}
 
-    function invdelete()
-    {
-        global $context, $scripturl;
+	function invdelete()
+	{
+		global $context, $scripturl;
 
-		// Set page stuff
-		$context['page_title'] = Shop::getText('main_button') . ' - ' . Shop::getText('main_inventory'). ' - ' . $item['name'];
-        //
-		// Get the item id
 		$use = (int) $_REQUEST['id'];
-
-        // no idea what this means but it seems important
-		$context['linktree'][] = [
-			'url' => $scripturl . '?action=shop;sa=invdel;id=' . $use,
-			'name' => sprintf(Shop::getText('item_using'), $item['name'])
-		];
-
-
-		// Item details
 		$item = Database::Get('', '', '', 'stshop_inventory AS si', array_merge(array_merge(Database::$inventory, Database::$items), ['sm.file']), 'WHERE si.id = {int:use} AND s.status = 1', true, 'LEFT JOIN {db_prefix}stshop_items AS s ON (s.itemid = si.itemid) LEFT JOIN {db_prefix}stshop_modules AS sm ON (sm.id = s.module)', ['use' => $use]);
 
 		$context['page_title'] = Shop::getText('main_button') . ' - ' . Shop::getText('main_inventory'). ' - ' . $item['name'];
+		$context['linktree'][] = [
+			'url' => "$scripturl?action=shop;sa=invdel;id=$use",
+			'name' => sprintf(Shop::getText('item_delete'), $item['name'])
+		];
 		$context['template_layers'][] = 'options';
 		$context['sub_template'] = 'invdel';
 		$context['item'] = $item;
-    }
+	}
 
-    function invdeleted()
-    {
-        global $context, $scripturl, $user_info;
-
-		// Set page stuff
-		$context['page_title'] = Shop::getText('main_button') . ' - ' . Shop::getText('main_inventory');
-
-		// Get the item id
-		$use = (int) $_REQUEST['id'];
-
-        // no idea what this means but it seems important
-		$context['linktree'][] = [
-			'url' => $scripturl . '?action=shop;sa=invdel;id=' . $use,
-			'name' => sprintf(Shop::getText('item_using'), $item['name'])
-		];
-
-		// Check session
+	function invdeleted()
+	{
+		global $context, $scripturl, $user_info;
 		checkSession();
 
-		// Item details
+		$use = (int) $_REQUEST['id'];
 		$item = Database::Get('', '', '', 'stshop_inventory AS si', array_merge(array_merge(Database::$inventory, Database::$items), ['sm.file']), 'WHERE si.id = {int:use} AND s.status = 1', true, 'LEFT JOIN {db_prefix}stshop_items AS s ON (s.itemid = si.itemid) LEFT JOIN {db_prefix}stshop_modules AS sm ON (sm.id = s.module)', ['use' => $use]);
 
-        // panic check against deleting other ppls items
-        // no idea if its needed but better to check too much than not enough
-        if ($item['userid'] != $user_info['id'])
-            fatal_error($txt['Shop_item_delete_other']);
+		if ($item['userid'] != $user_info['id'])
+			fatal_error(Shop::getText('item_delete_other'));
+
+		Database::Delete('stshop_inventory', 'id', $use);
 
 		$context['page_title'] = Shop::getText('main_button') . ' - ' . Shop::getText('main_inventory'). ' - ' . $item['name'];
+		$context['linktree'][] = [
+			'url' => "$scripturl?action=shop;sa=invdel;id=$use",
+			'name' => sprintf(Shop::getText('item_delete'), $item['name'])
+		];
 		$context['template_layers'][] = 'options';
 		$context['sub_template'] = 'invdeleted';
 		$context['item'] = $item;
-
-        Database::Delete('stshop_inventory', 'id', $use);
-    }
+	}
 }
