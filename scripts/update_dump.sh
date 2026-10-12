@@ -26,7 +26,9 @@ DELETE FROM smf_arcade_favorite;
 UPDATE smf_arcade_games SET
     num_plays = 0,
     num_rates = 0,
-    num_favorites = 0;
+    num_favorites = 0,
+    id_champion = 0,
+    id_champion_score = 0;
 DELETE FROM smf_arcade_guest_data;
 DELETE FROM smf_arcade_guest_extra_data;
 DELETE FROM smf_arcade_matches;
