@@ -708,7 +708,7 @@ class Inventory
 		);
 	}
 
-	function invdelete()
+	public function invdelete()
 	{
 		global $context, $scripturl;
 
@@ -728,7 +728,7 @@ class Inventory
 		$context['item'] = $item;
 	}
 
-	function invdeleted()
+	public function invdeleted()
 	{
 		global $context, $scripturl, $user_info;
 		checkSession();
