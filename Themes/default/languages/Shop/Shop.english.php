@@ -139,9 +139,11 @@ $txt['Shop_item_use'] = 'Usable';
 $txt['Shop_item_notusable'] = 'Not usable';
 $txt['Shop_item_used_success'] = 'The item %s was successfully used.';
 $txt['Shop_item_delete'] = 'Delete item';
+$txt['Shop_item_deleting'] = 'Deleting item %s';
 $txt['Shop_item_delete_confirm'] = 'Are you sure you want to delete the item %s? It will be gone forever (a very long time)!';
 $txt['Shop_item_delete_success'] = 'Item %s has been successfully deleted';
-$txt['Shop_item_delete_other'] = 'You cannot delete an item you dont own!';
+$txt['Shop_item_delete_other'] = 'You cannot delete an item you do not own.';
+$txt['Shop_item_delete_notexists'] = 'The item you are trying to delete does not exist.';
 
 // Categories
 $txt['Shop_categories'] = 'Categories';

@@ -715,10 +715,13 @@ class Inventory
 		$use = (int) $_REQUEST['id'];
 		$item = Database::Get('', '', '', 'stshop_inventory AS si', array_merge(array_merge(Database::$inventory, Database::$items), ['sm.file']), 'WHERE si.id = {int:use} AND s.status = 1', true, 'LEFT JOIN {db_prefix}stshop_items AS s ON (s.itemid = si.itemid) LEFT JOIN {db_prefix}stshop_modules AS sm ON (sm.id = s.module)', ['use' => $use]);
 
+		if (empty($item))
+			fatal_lang_error('Shop_item_delete_notexists', false);
+
 		$context['page_title'] = Shop::getText('main_button') . ' - ' . Shop::getText('main_inventory'). ' - ' . $item['name'];
 		$context['linktree'][] = [
 			'url' => "$scripturl?action=shop;sa=invdel;id=$use",
-			'name' => sprintf(Shop::getText('item_delete'), $item['name'])
+			'name' => sprintf(Shop::getText('item_deleting'), $item['name'])
 		];
 		$context['template_layers'][] = 'options';
 		$context['sub_template'] = 'invdel';
@@ -733,15 +736,17 @@ class Inventory
 		$use = (int) $_REQUEST['id'];
 		$item = Database::Get('', '', '', 'stshop_inventory AS si', array_merge(array_merge(Database::$inventory, Database::$items), ['sm.file']), 'WHERE si.id = {int:use} AND s.status = 1', true, 'LEFT JOIN {db_prefix}stshop_items AS s ON (s.itemid = si.itemid) LEFT JOIN {db_prefix}stshop_modules AS sm ON (sm.id = s.module)', ['use' => $use]);
 
+		if (empty($item))
+			fatal_lang_error('Shop_item_delete_notexists', false);
 		if ($item['userid'] != $user_info['id'])
-			fatal_error(Shop::getText('item_delete_other'));
+			fatal_lang_error('Shop_item_delete_other', false);
 
 		Database::Delete('stshop_inventory', 'id', $use);
 
 		$context['page_title'] = Shop::getText('main_button') . ' - ' . Shop::getText('main_inventory'). ' - ' . $item['name'];
 		$context['linktree'][] = [
 			'url' => "$scripturl?action=shop;sa=invdel;id=$use",
-			'name' => sprintf(Shop::getText('item_delete'), $item['name'])
+			'name' => sprintf(Shop::getText('item_deleting'), $item['name'])
 		];
 		$context['template_layers'][] = 'options';
 		$context['sub_template'] = 'invdeleted';
