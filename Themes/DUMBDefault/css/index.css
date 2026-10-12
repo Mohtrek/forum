@@ -2536,9 +2536,18 @@ dl {
 
 /* Signature preview */
 
-#preview_signature, #preview_signature_display {
-	width: 100%;
-	overflow: hidden;
+dt#preview_signature, dt#current_signature {
+	margin: 0;
+	margin-left: 12px;
+	width: 175px;
+}
+
+dd#preview_signature_display, dt#current_signature_display {
+	margin: 0;
+	margin-right: 12px;
+	padding: 0;
+	padding-left: 0.5em;
+	width: calc(100% - 175px - 12px - 12px);
 }
 
 /* Issue a warning */
