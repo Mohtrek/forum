@@ -2542,7 +2542,7 @@ dt#preview_signature, dt#current_signature {
 	width: 175px;
 }
 
-dd#preview_signature_display, dt#current_signature_display {
+dd#preview_signature_display, dd#current_signature_display {
 	margin: 0;
 	margin-right: 12px;
 	padding: 0;
