@@ -8,13 +8,24 @@
 	--bbc-pink: pink;
 }
 
-body.color-scheme-light, body.color-scheme-os {
+body.color-scheme-light {
 	--bbc-orange: #ff6c00;
 	--bbc-yellow: #f6b517;
 	--bbc-cyan: #00cece;
 	--bbc-blue: blue;
 	--bbc-purple: purple;
 	--bbc-pink: #ff758e;
+}
+
+@media (prefers-color-scheme: light) {
+	body.color-scheme-os {
+		--bbc-orange: #ff6c00;
+		--bbc-yellow: #f6b517;
+		--bbc-cyan: #00cece;
+		--bbc-blue: blue;
+		--bbc-purple: purple;
+		--bbc-pink: #ff758e;
+	}
 }
 
 /* Color remapping */
