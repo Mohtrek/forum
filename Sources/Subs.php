@@ -7,10 +7,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2025 Simple Machines and individual contributors
+ * @copyright 2026 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1.7
+ * @version 2.1.8
  */
 
 if (!defined('SMF'))
@@ -3141,7 +3141,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 									$flags = defined('FILTER_FLAG_EMAIL_UNICODE') ? FILTER_FLAG_EMAIL_UNICODE : null;
 
-									if (!$can_validate || filter_var($parsedurl['path'], FILTER_VALIDATE_EMAIL, $flags) !== false)
+									if (!$can_validate || (filter_var($parsedurl['path'], FILTER_VALIDATE_EMAIL, $flags) !== false && filter_var($parsedurl['path'], FILTER_SANITIZE_EMAIL) === $parsedurl['path']))
 										return '[email=' . str_replace('mailto:', '', $url) . ']' . $url . '[/email]';
 									else
 										return $url;
@@ -3456,7 +3456,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 						$params['{' . $key . '}'] = $matches[$i + 1];
 
 					// Just to make sure: replace any $ or { so they can't interpolate wrongly.
-					$params['{' . $key . '}'] = strtr($params['{' . $key . '}'], array('$' => '&#036;', '{' => '&#123;'));
+					$params['{' . $key . '}'] = $smcFunc['htmlspecialchars'](strtr($params['{' . $key . '}'], array('$' => '&#036;', '{' => '&#123;')), ENT_QUOTES);
 				}
 
 				foreach ($possible['parameters'] as $p => $info)
@@ -3917,7 +3917,7 @@ function parsesmileys(&$message)
 	static $smileyPregSearch = null, $smileyPregReplacements = array();
 
 	// No smiley set at all?!
-	if ($user_info['smiley_set'] == 'none' || trim($message) == '')
+	if (empty($user_info['smiley_set']) || $user_info['smiley_set'] == 'none' || trim($message) == '')
 		return;
 
 	// Maybe a mod wants to implement an alternative method (e.g. emojis instead of images)
@@ -4064,6 +4064,14 @@ function get_proxied_url($url)
 
 	// Don't bother with HTTPS URLs, schemeless URLs, or obviously invalid URLs
 	if (empty($parsedurl['scheme']) || empty($parsedurl['host']) || empty($parsedurl['path']) || $parsedurl['scheme'] === 'https')
+		return $url;
+
+	// Don't proxy URLs whose hosts are private or reserved IP addresses
+	if (filter_var(trim($parsedurl['host'], '[]'), FILTER_VALIDATE_IP) !== false && filter_var(trim($parsedurl['host'], '[]'), FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE) === false)
+		return $url;
+
+	// Don't proxy URLs with domains that aren't part of public DNS
+	if (preg_match('/\b(?' . '>example|local(?' . '>host)?|onion|test|alt|in(?' . '>ternal|valid))$/', $parsedurl['host']))
 		return $url;
 
 	// We don't need to proxy our own resources
@@ -4254,6 +4262,10 @@ function url_image_size($url)
 	// Make sure it is a proper URL.
 	$url = str_replace(' ', '%20', $url);
 
+	if (!is_fetch_safe($url)) {
+		return false;
+	}
+
 	// Can we pull this from the cache... please please?
 	if (($temp = cache_get_data('url_image_size-' . md5($url), 240)) !== null)
 		return $temp;
@@ -4280,6 +4292,18 @@ function url_image_size($url)
 		// Successful?  Continue...
 		if ($fp != false)
 		{
+			// Double check that we connected to the expected IP and port.
+			// If the connection was successful, name will be "<IP address>:<port>"
+			$socket_name = @stream_socket_get_name($fp, true);
+
+			if (!is_string($socket_name) || substr($socket_name, -3) !== ':80' || !is_fetch_safe('http://' . $socket_name))
+			{
+				fclose($fp);
+				loadLanguage('Errors');
+				trigger_error($txt['fetch_web_data_bad_url'], E_USER_NOTICE);
+				return false;
+			}
+
 			// Send the HEAD request (since we don't have to worry about chunked, HTTP/1.1 is fine here.)
 			fwrite($fp, 'HEAD /' . $match[2] . ' HTTP/1.1' . "\r\n" . 'Host: ' . $match[1] . "\r\n" . 'user-agent: '. SMF_USER_AGENT . "\r\n" . 'Connection: close' . "\r\n\r\n");
 
@@ -4529,11 +4553,11 @@ function setMemoryLimit($needed, $in_use = false)
 function memoryReturnBytes($val)
 {
 	if (is_integer($val))
-		return $val;
+		return $val < 0 ? PHP_INT_MAX : $val;
 
 	// Separate the number from the designator
 	$val = trim($val);
-	$num = intval(substr($val, 0, strlen($val) - 1));
+	$num = (int) $val;
 	$last = strtolower(substr($val, -1));
 
 	// convert to bytes
@@ -4546,7 +4570,7 @@ function memoryReturnBytes($val)
 		case 'k':
 			$num *= 1024;
 	}
-	return $num;
+	return $num < 0 ? PHP_INT_MAX : $num;
 }
 
 /**
@@ -6155,7 +6179,18 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 	global $webmaster_email, $sourcedir, $txt;
 	static $keep_alive_dom = null, $keep_alive_fp = null;
 
-	preg_match('~^(http|ftp)(s)?://([^/:]+)(:(\d+))?(.+)$~', iri_to_url($url), $match);
+	$url = iri_to_url(normalize_iri($url));
+
+	// SSRF guard: refuse loopback/private/link-local/reserved targets and
+	// non-fetchable schemes before any connection is attempted.
+	if (!is_fetch_safe($url))
+	{
+		loadLanguage('Errors');
+		trigger_error($txt['fetch_web_data_bad_url'], E_USER_NOTICE);
+		return false;
+	}
+
+	preg_match('~^(http|ftp)(s)?://([^/:]+)(:(\d+))?(.+)$~', $url, $match);
 
 	// No scheme? No data for you!
 	if (empty($match[1]))
@@ -6179,6 +6214,18 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 		$fp = @fsockopen($ftp->pasv['ip'], $ftp->pasv['port'], $err, $err, 5);
 		if (!$fp)
 			return false;
+
+		// Double check that we connected to the expected IP and port.
+		// If the connection was successful, name will be "<IP address>:<port>"
+		$socket_name = @stream_socket_get_name($fp, true);
+
+		if (!\is_string($socket_name) || !str_ends_with($socket_name, ':' . $ftp->pasv['port']) || $ftp->pasv['ip'] !== substr($socket_name, 0, -\strlen(':' . $ftp->pasv['port'])) || !url_resolves_to($url, $ftp->pasv['ip']))
+		{
+			fclose($fp);
+			loadLanguage('Errors');
+			trigger_error($txt['fetch_web_data_bad_url'], E_USER_NOTICE);
+			return false;
+		}
 
 		// The server should now say something in acknowledgement.
 		$ftp->check_response(150);
@@ -6206,6 +6253,18 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 		}
 		if (!empty($fp))
 		{
+			// Double check that we connected to the expected IP and port.
+			// If the connection was successful, name will be "<IP address>:<port>"
+			$socket_name = @stream_socket_get_name($fp, true);
+
+			if (!is_string($socket_name) || substr($socket_name, ($match[2] ? -4 : -3)) !== ($match[2] ? ':443' : ':80') || !url_resolves_to($url, substr($socket_name, 0, ($match[2] ? -4 : -3))))
+			{
+				fclose($fp);
+				loadLanguage('Errors');
+				trigger_error($txt['fetch_web_data_bad_url'], E_USER_NOTICE);
+				return false;
+			}
+
 			if ($keep_alive)
 			{
 				$keep_alive_dom = $match[3];
@@ -6321,6 +6380,115 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 	}
 
 	return $data;
+}
+
+/**
+ * Checks whether a URL is safe to fetch from the server.
+ *
+ * Rejects URLs whose scheme is not in the fetchable set, and URLs whose
+ * host resolves (or is) a non-global IP address: loopback, private,
+ * link-local (incl. 169.254.0.0/16 cloud metadata), or other reserved
+ * ranges. This is the single chokepoint that prevents the avatar, proxy,
+ * get_mime_type, and task fetchers from being used as SSRF primitives. It is
+ * also re-applied to each redirect target by the fetchers.
+ *
+ * @param string $url The URL to check.
+ * @return bool True if the URL is safe to fetch, false otherwise.
+ */
+function is_fetch_safe($url)
+{
+	if (!is_string($url))
+		return false;
+
+	$parsedurl = parse_iri(iri_to_url($url));
+
+	if (empty($parsedurl['scheme']) || !\in_array($parsedurl['scheme'], array('http', 'https', 'ftp', 'ftps')) || empty($parsedurl['host']) || preg_match('/\b(?' . '>example|local(?' . '>host)?|onion|test|alt|in(?' . '>ternal|valid))$/', $parsedurl['host']))
+	{
+		$is_safe = false;
+	}
+	else
+	{
+		$ips = get_ips_for_url($url);
+
+		$is_safe = $ips !== array() && $ips === array_filter(
+			$ips,
+			function ($ip)
+			{
+				return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE);
+			}
+		);
+	}
+
+	return $is_safe;
+}
+
+/**
+ * Looks up the IP address(es) that the given URL's host resolves to.
+ *
+ * @param string $url The URL
+ * @return array The IP address(es).
+ */
+function get_ips_for_url($url)
+{
+	static $ips = array();
+
+	if (!is_string($url))
+		return [];
+
+	$host = parse_url(iri_to_url($url), PHP_URL_HOST);
+
+	if (isset($ips[$host])) {
+		return $ips[$host];
+	}
+
+	$ips[$host] = array();
+
+	// Resolve the host to its address(es). A literal IP resolves to itself.
+	if (filter_var(trim($host, '[]'), FILTER_VALIDATE_IP) !== false)
+	{
+		$ips[$host][] = trim($host, '[]');
+	}
+	else
+	{
+		$records = @dns_get_record($host, DNS_A | DNS_AAAA);
+
+		foreach ((array) $records as $record)
+		{
+			if (!empty($record['ip']))
+				$ips[$host][] = $record['ip'];
+
+			if (!empty($record['ipv6']))
+				$ips[$host][] = $record['ipv6'];
+		}
+	}
+
+	return $ips[$host];
+}
+
+/**
+ * Checks whether the given URL resolves to the given IP address.
+ *
+ * If the URL resolves to multiple IP addresses, this function returns true
+ * if any of those IP addresses are the given one.
+ *
+ * @param string $url The URL
+ * @param string $ip The IP address.
+ * @return bool Whether this URL resolves to the given IP address.
+ */
+function url_resolves_to($url, $ip)
+{
+	if (!is_string($url) || !is_string($ip))
+		return false;
+
+	$ip = trim($ip, '[]');
+
+	foreach (get_ips_for_url($url) as $known_ip)
+	{
+		if ($ip == $known_ip)
+			return true;
+	}
+
+	return false;
 }
 
 /**
@@ -6762,6 +6930,10 @@ function smf_list_timezones($when = 'now')
 		if (isset($zones[$tzkey]['metazone']) && isset($tzid_metazones[$tzid]))
 			$tzkey = serialize(array_merge($tzinfo, array('metazone' => $tzid_metazones[$tzid])));
 
+		// Get the geographical info for this tzid
+		$tzgeo = timezone_location_get($tz);
+		$longitudes[$tzkey] = $tzgeo['longitude'];
+
 		// Don't overwrite our preferred tzids
 		if (empty($zones[$tzkey]['tzid']))
 		{
@@ -6776,7 +6948,6 @@ function smf_list_timezones($when = 'now')
 				$zones[$tzkey]['metazone'] = $tzid_metazones[$tzid];
 			else
 			{
-				$tzgeo = timezone_location_get($tz);
 				$country_tzids = get_sorted_tzids_for_country($tzgeo['country_code']);
 
 				if (count($country_tzids) === 1)
@@ -6831,7 +7002,7 @@ function smf_list_timezones($when = 'now')
 	}
 
 	// Sort by current offset, then standard offset, then DST type, then label.
-	array_multisort($offsets, SORT_DESC, SORT_NUMERIC, $std_offsets, SORT_DESC, SORT_NUMERIC, $dst_types, SORT_ASC, $labels, SORT_ASC, $zones);
+	array_multisort($offsets, SORT_DESC, SORT_NUMERIC, $std_offsets, SORT_DESC, SORT_NUMERIC, $longitudes, SORT_DESC, $labels, SORT_ASC, $zones);
 
 	// Build the final array of formatted values
 	$priority_timezones = array();

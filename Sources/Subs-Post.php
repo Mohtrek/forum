@@ -9,10 +9,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2025 Simple Machines and individual contributors
+ * @copyright 2026 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1.5
+ * @version 2.1.8
  */
 
 if (!defined('SMF'))
@@ -471,8 +471,11 @@ function fixTag(&$message, $myTag, $protocols, $embeddedUrl = false, $hasEqualSi
 
 	if ($hasEqualSign && $embeddedUrl)
 	{
-		$quoted = preg_match('~\[(' . $myTag . ')=&quot;~', $message);
-		preg_match_all('~\[(' . $myTag . ')=' . ($quoted ? '&quot;(.*?)&quot;' : '([^\]]*?)') . '\](?:(.+?)\[/(' . $myTag . ')\])?~is', $message, $matches);
+		preg_match_all('~\[(' . $myTag . ')=(&quot;(?:[^&]|&(?!quot;))*?&quot;|[^\]]*?)\](?:(.+?)\[/(' . $myTag . ')\])?~is', $message, $matches);
+
+		foreach ($matches[2] as $key => $match) {
+			$matches[2][$key] = preg_replace('/^&quot;|&quot;$/', '', $match);
+		}
 	}
 	elseif ($hasEqualSign)
 		preg_match_all('~\[(' . $myTag . ')=([^\]]*?)\](?:(.+?)\[/(' . $myTag . ')\])?~is', $message, $matches);
@@ -487,9 +490,6 @@ function fixTag(&$message, $myTag, $protocols, $embeddedUrl = false, $hasEqualSi
 		$this_close = $hasEqualSign ? (empty($matches[4][$k]) ? '' : $matches[4][$k]) : $matches[3][$k];
 
 		$found = false;
-
-		if (preg_match('/^&quot;(.*?)&quot;$/', $replace, $m) != 0)
-			$replace = $m[1];
 
 		foreach ($protocols as $protocol)
 		{
@@ -1529,7 +1529,7 @@ function smtp_mail($mail_to_array, $subject, $message, $headers)
 			return false;
 		if (!server_parse('DATA', $socket, '354'))
 			return false;
-		fputs($socket, 'Subject: ' . $subject . "\r\n");
+		fputs($socket, 'Subject: ' . strtr($subject, ["\r" => '', "\n" => '']) . "\r\n");
 		if (strlen($mail_to) > 0)
 			fputs($socket, 'To: <' . $mail_to . '>' . "\r\n");
 		fputs($socket, $headers . "\r\n\r\n");
