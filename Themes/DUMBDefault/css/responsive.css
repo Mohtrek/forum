@@ -238,7 +238,7 @@
 		grid-template-columns: min-content 1fr 16%;
 	}
 	.up_contain .lastpost {
-		border-top: 1px solid #ddd;
+		border-top: 1px solid var(--border-color);
 		min-height: initial;
 		grid-column-start: 1;
 		grid-column-end: 4;
