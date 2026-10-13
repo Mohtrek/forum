@@ -2932,14 +2932,12 @@ dl.addrules dt.floatleft {
 /* Highlight the target item */
 .windowbg:target {
 	background: var(--ter-bg-color);
-	color: var(--accent-label-color-ter);
 }
 
 /* Add some hover on table rows */
 tr.windowbg:hover,
 tr.windowbg:hover a,
 tr.windowbg:hover a:visited {
-	color: var(--accent-label-color-ter);
 	background: var(--ter-color);
 }
 

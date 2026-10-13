@@ -96,6 +96,7 @@ function template_html_above()
 	loadCSSFile('tags.css', ['minimize' => true]);
 	loadCSSFile('groups.css', ['minimize' => true]);
 	loadCSSFile('randChar.css', ['minimize' => true]);
+	loadCSSFile('arcade.css', ['minimize' => true]);
 
 	// Show right to left, the language code, and the character set for ease of translating.
 	echo '<!DOCTYPE html>

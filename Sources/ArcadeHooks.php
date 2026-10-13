@@ -478,12 +478,10 @@ function Arcade_load_theme()
 	$arcade_version = !empty($arcadeModSettings['arcadeVersion']) ? $arcadeModSettings['arcadeVersion'] : '';
 	$suffixVersion = 'v' . (!empty($arcadeModSettings['arcadeGameTesting']) ? str_pad(dechex(mt_rand(0, 0xFFFFF)), 5, '0', STR_PAD_LEFT) : preg_replace('/[^0-9a-zA-Z]+/', '', $arcade_version));
 	$currentArcadeAction = isset($_REQUEST['action']) && $_REQUEST['action'] == 'retro_arch' ? 'retro_arch' : (!empty($_SESSION['arcade_rom_initiate']) ? 'retro_arch' : 'arcade');
-	$_SESSION['arcadeNewSessionCheck'] = !empty($_SESSION['arcadeNewSessionCheck']) && !empty($_SESSION['arcade_isMobilePlay']) ? 1 : 0;
+	$_SESSION['arcadeNewSessionCheck'] = !empty($_SESSION['arcadeNewSessionCheck']) ? 1 : 0;
 	$context['html_headers'] .= '
 	<script type="text/javascript" src="' . $settings['default_theme_url'] . '/arcade_scripts/arcade-func.js?' . $suffixVersion . '"></script>
-	<script type="text/javascript" src="' . $settings['default_theme_url'] . '/arcade_scripts/arcadeMobileDetect.js?' . $suffixVersion . '"></script>
 	<script type="text/javascript">
-		var arcadePhpDetectMobile = ' . (!empty($_SESSION['arcade_isMobilePlay']) ? 'true' : 'false') . ';
 		var arcadePhpDetectSession = ' . (!empty($_SESSION['arcadeNewSessionCheck']) ? 'true' : 'false') . ';
 		var arcadeDetectGameAction = "' . ($currentArcadeAction) . '";
 	</script>';
