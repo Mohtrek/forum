@@ -1369,21 +1369,11 @@ function ArcadeHighscore($selfScorelist = 'highscore')
 	// Is game set
 	if (!isset($_REQUEST['game'])) {
 		arcadeClearSession();
-		/*
-		if (!empty($user_info['is_guest'])) {
-			redirectexit($scripturl . '?action=' . $action);
-		}
-		*/
 		fatal_lang_error('arcade_game_not_found', false);
 	}
 	// Get game info
 	if (!($game = getGameInfo($_REQUEST['game'], false, $rom))) {
 		arcadeClearSession();
-		/*
-		if (!empty($user_info['is_guest'])) {
-			redirectexit($scripturl . '?action=' . $action);
-		}
-		*/
 		fatal_lang_error('arcade_game_not_found', false);
 	}
 	if (!$game['highscore_support']) {
@@ -1540,7 +1530,8 @@ function ArcadeHighscore($selfScorelist = 'highscore')
 			IFNULL(mem.real_name, sc.player_name) AS real_name
 		FROM  {db_prefix}arcade_scores AS sc
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = sc.id_member)
-		WHERE sc.id_game = {int:game}' . ($selfScorelist == 'myhighscore' && !empty($user_info['is_guest']) ? ' AND sc.id_member = {int:memberid}' : '') . '
+		WHERE sc.id_game = {int:game} AND ' .
+		($selfScorelist == 'myhighscore' && !empty($user_info['is_guest']) ? 'sc.id_member = {int:memberid}' : 'sc.personal_best = 1') . '
 		ORDER BY position
 		LIMIT {int:start}, {int:scores_per_page}',
 		array(
