@@ -314,121 +314,48 @@ function Arcade_profile_areas(&$profile_areas)
 	);
 }
 
-function Arcade_menu_buttons()
+function Arcade_menu_buttons(&$buttons)
 {
-	global $user_info, $context, $settings, $arcadeModSettings, $scripturl, $txt;
-
-	$menu_buttons = !empty($context['menu_buttons']) ? $context['menu_buttons'] : [];
-
-	list($menuButtons, $allMenuButtons, $count, $num) = [[], [], 0, 0];
-	$buttonPlacementKey = !empty($arcadeModSettings['arcadeButtonPlacement']) ? intval($arcadeModSettings['arcadeButtonPlacement']) : 0;
-	$buttonFringe = !empty($arcadeModSettings['arcadeButtonPlacementExtremity']) ? intval($arcadeModSettings['arcadeButtonPlacementExtremity']) : 0;
-	$buttonSequence = !empty($arcadeModSettings['arcadeButtonSequence']) ? 'after' : 'before';
-	foreach ($menu_buttons as $keyx => $button) {
-		if (!empty($menu_buttons[$keyx]['show'])) {
-			$menuButtons[] = $keyx;
-			$count++;
-		}
-		elseif ($count == 0) {
-			$buttonFringe = 1;
-		}
-		elseif ($num == $buttonPlacementKey) {
-			$buttonPlacementKey = $count;
-			$buttonSequence = 'after';
-		}
-		$allMenuButtons[] = $keyx;
-		$num++;
-	}
-
-	$xaction = !empty($_REQUEST['action']) && is_string($_REQUEST['action']) && in_array($_REQUEST['action'], array('arcade', 'retro_arch')) ? true : false;
-	$buttonPlacement = array_key_exists($buttonPlacementKey, $menuButtons) ? $menuButtons[$buttonPlacementKey] : 'search';
-	$context['allow_arcade'] = allowedTo('arcade_view') && !empty($arcadeModSettings['arcadeEnabled']) ? true : false;
-	$_SESSION['current_cat'] = !empty($_SESSION['current_cat']) ? $_SESSION['current_cat'] : 'all';
-	$_SESSION['arcade_sortby'] = !empty($_SESSION['arcade_sortby']) ? $_SESSION['arcade_sortby'] : 'age';
-	$_SESSION['arcade_sortby_rom'] = !empty($_SESSION['arcade_sortby_rom']) ? $_SESSION['arcade_sortby_rom'] : 'age';
-	$reset = isset($_REQUEST['sortby']) && $_REQUEST['sortby'] == 'reset' ? true : false;
-	$sortArray = array('age', 'nocat', 'a2z', 'z2a', 'plays', 'plays_reverse', 'champion', 'champs', 'rating', 'favorites');
-	$subs = allowedTo('arcade_edit_settings_own') || allowedTo('arcade_admin') ? true : false;
-	$show = $context['allow_arcade'] || allowedTo('arcade_admin') ? true : false;
-	$showRetroArch = allowedTo('arcade_view_retro_arch') ? true : (allowedTo('arcade_admin') ? true : false);
-	$retroArchLink = !allowedTo('arcade_view_retro_arch') ? '<span class="alert" title="' . $txt['arcade_link_disabled'] . '">' . $txt['arcade_retro_arch'] . '</span>' : $txt['arcade_retro_arch'];
-	$currentAction = isset($context['current_action']) && $context['current_action'] == 'retro_arch' ? 'retro_arch' : 'arcade';
+	global $user_info, $arcadeModSettings, $scripturl, $txt;
+	$isAdmin = allowedTo('arcade_admin');
+	$arcadeEnabled = !empty($arcadeModSettings['arcadeEnabled']);
+	$retroArchEnabled = !empty($arcadeModSettings['arcadeRomToggle']) && !empty($arcadeModSettings['arcadeRetroArchEnabled']);
+	$canViewRetroArch = $retroArchEnabled && allowedTo('arcade_view_retro_arch');
+	$canEditSettings = allowedTo('arcade_edit_settings_own') || $isAdmin;
+	$canViewArcade = (allowedTo('arcade_view') && $arcadeEnabled) || $isAdmin;
+	$retroArchLink = !$canViewRetroArch ? '<span class="alert" title="' . $txt['arcade_link_disabled'] . '">' . $txt['arcade_retro_arch'] . '</span>' : $txt['arcade_retro_arch'];
 	$action = !empty($_REQUEST['action']) && is_string($_REQUEST['action']) && $_REQUEST['action'] == 'retro_arch' ? 'retro_arch' : 'arcade';
 	$action = !empty($arcadeModSettings['arcadeRetroArchEnabled']) && empty($arcadeModSettings['arcadeEnabled']) && empty($arcadeModSettings['arcadeRomToggle']) ? 'retro_arch' : $action;
-	$rom = $action == 'retro_arch' ? '_rom' : '';
-	$startAt = !empty($_SESSION['arcade_game_start']) ? (int)$_SESSION['arcade_game_start'] : 0;
-	$start = !empty($startAt) ? 'start=' . abs($startAt) : '';
-	$startAtRom = !empty($_SESSION['arcade_game_start_rom']) ? (int)$_SESSION['arcade_game_start_rom'] : 0;
-	$startRom = !empty($startAtRom) ? 'start=' . abs($startAtRom) : '';
-	if (in_array($_SESSION['arcade_sortby'], $sortArray) && !$reset)
-		$sort = ';sa=list;sortby=' . $_SESSION['arcade_sortby'] . ';' . $start;
-	else {
-		$_SESSION['arcade_sortby'] = 'age';
-		$sort = ';sa=list;sortby=age;dir=desc;';
-	}
-	if (in_array($_SESSION['arcade_sortby_rom'], $sortArray) && !$reset)
-		$sortRom = ';sa=list;sortby=' . $_SESSION['arcade_sortby_rom'] . ';' . $startRom;
-	else {
-		$_SESSION['arcade_sortby_rom'] = 'age';
-		$sortRom = ';sa=list;sortby=age;dir=desc;';
-	}
-	$arcadeNav = [
-		$currentAction => [
-			'title' => $action == 'retro_arch' ? $txt['rom_arcade'] : $txt['arcade'],
-			'href' => $scripturl . '?action=' . $action,
-			'show' => $show,
-			'icon' => '<img src="' . $settings['default_images_url'] . '/icons/arcade_games.png" />',
-			'active_button' => $action == $currentAction ? true : false,
-			'sub_buttons' => array(
-				'arcade' => array(
-					'title' => $txt['arcade'],
-					'href' => $scripturl . '?action=arcade',
-					'show' => ($subs && $show ? true : false),
-				),
-				'retro_arch' => [
-					'title' => $retroArchLink,
-					'href' => $scripturl . '?action=retro_arch' . $sortRom,
-					'show' => ($showRetroArch && empty($arcadeModSettings['arcadeRomToggle']) && !empty($arcadeModSettings['arcadeRetroArchEnabled'])),
-				],
-				'profile' => array(
-					'title' => $txt['arcadeSettings'],
-					'href' => $scripturl . '?action=profile;area=arcadeSettings;u=' . $user_info['id'],
-					'show' => ($subs && $show ? true : false),
-				),
-				'admin' => array(
-					'title' => $txt['arcade_nav_admin'],
-					'href' => $scripturl . '?action=admin;area=arcade',
-					'show' => (allowedTo('arcade_admin') ? true : false),
-					'is_last' => true,
-				),
+	$buttons['arcade'] = [
+		'title' => $action == 'retro_arch' ? $txt['rom_arcade'] : $txt['arcade'],
+		'href' => $scripturl . '?action=' . $action,
+		'show' => $canViewArcade,
+		'icon' => 'icons/arcade_games.png',
+		'active_button' => $action == 'arcade',
+		'sub_buttons' => array(
+			'arcade' => array(
+				'title' => $txt['arcade'],
+				'href' => $scripturl . '?action=arcade',
+				'show' => $canViewRetroArch || $canEditSettings || $isAdmin,
 			),
-		]
+			'retro_arch' => [
+				'title' => $retroArchLink,
+				'href' => $scripturl . '?action=retro_arch',
+				'show' => $canViewRetroArch,
+			],
+			'profile' => array(
+				'title' => $txt['arcadeSettings'],
+				'href' => $scripturl . '?action=profile;area=arcadeSettings;u=' . $user_info['id'],
+				'show' => $canEditSettings,
+			),
+			'admin' => array(
+				'title' => $txt['arcade_nav_admin'],
+				'href' => $scripturl . '?action=admin;area=arcade',
+				'show' => $isAdmin,
+				'is_last' => true,
+			),
+		),
 	];
-
-	if ((empty($arcadeModSettings['arcadeRetroArchEnabled']) || !allowedTo('arcade_view_retro_arch')) && !empty($arcadeModSettings['arcadeHideDisabled'])) {
-		unset($arcadeNav[$currentAction]['sub_buttons']['retro_arch']);
-	}
-	if ((empty($arcadeModSettings['arcadeEnabled']) || !allowedTo('arcade_view')) && !empty($arcadeModSettings['arcadeHideDisabled'])) {
-		unset($arcadeNav[$currentAction]['sub_buttons']['arcade']);
-	}
-
-	$new_buttons = arcade_array_insert($menu_buttons, $buttonPlacement, $arcadeNav, $buttonSequence, $buttonFringe);
-
-	if (!empty($arcadeModSettings['arcadeRetroArchEnabled']) || !empty($arcadeModSettings['arcadeEnabled'])) {
-		$context['menu_buttons'] = $new_buttons;
-
-		if (!empty($xaction)) {
-			foreach ($context['menu_buttons'] as $act => $button) {
-				$context['menu_buttons'][$act]['active_button'] = false;
-			}
-			$context['menu_buttons'][$currentAction]['active_button'] = true;
-			//$context['menu_buttons']['home']['active_button'] = false;
-			//$context['menu_buttons']['forum']['active_button'] = false;
-		}
-		else {
-			$context['menu_buttons'][$currentAction]['active_button'] = false;
-		}
-	}
 }
 
 function Arcade_admin_areas(&$admin_areas)
