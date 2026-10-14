@@ -2462,9 +2462,12 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			),
 			array(
 				'tag' => 'youtube',
+				'parameters' => array(
+					'start' => ['match' => '(\d+)', 'optional' => true],
+				),
 				'type' => 'unparsed_content',
-				'content' => '<div class="videocontainer"><div><iframe frameborder="0" src="https://www.youtube.com/embed/$1?origin=' . $hosturl . '&wmode=opaque" data-youtube-id="$1" allowfullscreen loading="lazy"></iframe></div></div>',
-				'disabled_content' => '<a href="https://www.youtube.com/watch?v=$1" target="_blank" rel="noopener">https://www.youtube.com/watch?v=$1</a>',
+				'content' => '<div class="videocontainer"><div><iframe frameborder="0" src="https://www.youtube.com/embed/$1?origin=' . $hosturl . '&wmode=opaque&start={start}" data-youtube-id="$1" allowfullscreen loading="lazy"></iframe></div></div>',
+				'disabled_content' => '<a href="https://www.youtube.com/watch?v=$1&t={start}" target="_blank" rel="noopener">https://www.youtube.com/watch?v=$1&t={start}</a>',
 				'block_level' => true,
 			),
 		);
