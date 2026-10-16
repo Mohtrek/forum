@@ -74,7 +74,7 @@ function template_home()
 			</h3>
 		</div>
 		<div class="information">
-			<a href="', $scripturl, '?action=profile"><img class="avatar" style="display: inline" src="', $context['user']['avatar']['href'], '" alt="" /></a><br />
+			<a href="', $scripturl, '?action=profile;u=' . $context['user']['id'] . '"><img class="avatar" style="display: inline" src="', $context['user']['avatar']['href'], '" alt="" /></a><br />
 			<strong>', $txt['Shop_money_pocket'], ':</strong> ', Format::cash($context['user']['shopMoney']), '<br />
 			<strong>', $txt['Shop_money_bank'], ':</strong> ', Format::cash($context['user']['shopBank']);
 	if (!empty($modSettings['Shop_enable_games']))
@@ -176,6 +176,34 @@ function template_invused()
 		<div class="windowbg">
 			', sprintf($txt['Shop_item_used_success'], $context['item']['name']), '<br /><br />
 			', $context['shop']['used']['input'], '<br />
+		</div>';
+}
+
+function template_invdel()
+{
+	global $context, $txt, $scripturl;
+
+		echo '
+		<div class="roundframe">
+			<form method="post" action="', $scripturl,'?action=shop;sa=invdeleted">
+				<input type="hidden" name="id" value="', $context['item']['id'], '">
+				', sprintf($txt['Shop_item_delete_confirm'], $context['item']['name']);
+				
+        echo '
+				<br />
+				<input class="button floatright" type="submit" value="', $txt['Shop_item_delete'], '" />
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+			</form>
+		</div>';
+}
+
+function template_invdeleted()
+{
+	global $context, $txt;
+
+		echo '
+		<div class="windowbg">
+			', sprintf($txt['Shop_item_delete_success'], $context['item']['name']), '<br /><br />
 		</div>';
 }
 
@@ -457,7 +485,7 @@ function template_games_play_above()
 
 			// Display the payout table for others
 			if (!empty($context['shop_game_spin'][1]))
-				echo str_repeat('<img src="'. $context['shop_game_images'] . $face . '.png" alt="" style="width: 25px; height: 25px; vertical-align: middle;" />', $context['shop_game_spin'][1]), '&nbsp; ', Format::cash($modSettings['Shop_settings_' . $_REQUEST['play'] . '_' . $payout]), '<br /><hr />';
+				echo str_repeat('<img src="'. $context['shop_game_images'] . $face . '.png" alt="" style="vertical-align: middle;" />', $context['shop_game_spin'][1]), '&nbsp; ', Format::cash($modSettings['Shop_settings_' . $_REQUEST['play'] . '_' . $payout]), '<br /><hr />';
 			else
 				echo $txt['Shop_games_' . $_REQUEST['play'] . '_'. $payout], $modSettings['Shop_settings_' . $_REQUEST['play'] . '_' . $payout] . '<hr />';
 		}

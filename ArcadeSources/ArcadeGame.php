@@ -180,7 +180,7 @@ function ArcadePlay()
 		'last_id' => $context['game']['id'],
 	);
 
-	if (!empty($context['game']['type']) && $context['game']['type'] == 'fullscreen' && empty($_SESSION['arcade_isMobilePlay']))
+	if (!empty($context['game']['type']) && $context['game']['type'] == 'fullscreen')
 	{
 		$_REQUEST['pop'] = 1;
 		$_REQUEST['full'] = 1;
@@ -322,14 +322,7 @@ function ArcadePlay()
 			var arcade_game_dir = "' . $arcadeModSettings['gamesUrl'] . '/' . $context['game']['directory'] . '";
 			// ]]></script>';
 
-			if (empty($_SESSION['arcade_isMobilePlay']))
-				loadTemplate('ArcadeGame');
-			else
-			{
-				$context['html_headers'] .= '
-			<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">';
-				loadTemplate('ArcadeGameMobile');
-			}
+			loadTemplate('ArcadeGame');
 
 			return;
 		}
@@ -375,14 +368,8 @@ function ArcadePlay()
 				<script type="text/javascript"><!-- // --><![CDATA[
 				var arcade_game_dir = "' . $arcadeModSettings['gamesUrl'] . '/' . $context['game']['directory'] . '";
 				// ]]></script>';
-				if (empty($_SESSION['arcade_isMobilePlay']))
-					loadTemplate('ArcadeGame');
-				else
-				{
-					$context['html_headers'] .= '
-			<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">';
-					loadTemplate('ArcadeGameMobile');
-				}
+				
+				loadTemplate('ArcadeGame');
 
 				return;
 			}
@@ -402,14 +389,8 @@ function ArcadePlay()
 				<script type="text/javascript"><!-- // --><![CDATA[
 				var arcade_game_dir = "' . $arcadeModSettings['gamesUrl'] . '/' . $context['game']['directory'] . '";
 				// ]]></script>';
-				if (empty($_SESSION['arcade_isMobilePlay']))
-					loadTemplate('ArcadeGame');
-				else
-				{
-					$context['html_headers'] .= '
-			<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">';
-					loadTemplate('ArcadeGameMobile');
-				}
+
+				loadTemplate('ArcadeGame');
 
 				return;
 			}
@@ -479,14 +460,8 @@ function ArcadePlay()
 				'name' => $context['game']['name'],
 			);
 
-			if (empty($_SESSION['arcade_isMobilePlay']))
-				loadTemplate('ArcadeGame');
-			else
-			{
-				$context['html_headers'] .= '
-			<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">';
-				loadTemplate('ArcadeGameMobile');
-			}
+
+			loadTemplate('ArcadeGame');
 
 			return;
 		}
@@ -517,13 +492,7 @@ function ArcadePlay()
 					'name' => $context['game']['name'],
 				);
 
-				if (empty($_SESSION['arcade_isMobilePlay']))
-					loadTemplate('ArcadeGame');
-				else
-				{
-					$context['html_headers'] .= '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">';
-					loadTemplate('ArcadeGameMobile');
-				}
+				loadTemplate('ArcadeGame');
 
 				return;
 				// ignore...
@@ -547,14 +516,7 @@ function ArcadePlay()
 					'name' => $context['game']['name'],
 				);
 
-				if (empty($_SESSION['arcade_isMobilePlay']))
-					loadTemplate('ArcadeGame');
-				else
-				{
-					$context['html_headers'] .= '
-			<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">';
-					loadTemplate('ArcadeGameMobile');
-				}
+				loadTemplate('ArcadeGame');
 				return;
 			}
 		}
@@ -992,6 +954,222 @@ function ArcadeSubmit($url = '')
 		redirectexit('action=arcade');
 }
 
+function jsonError($error)
+{
+	send_http_status(400);
+	die(json_encode(['error' => $error]));
+}
+
+function ArcadeStartGame()
+{
+	global $arcadeModSettings, $user_info;
+	header('Content-Type: application/json');
+
+	if ($user_info['is_guest'])
+	{
+		die(json_encode([
+			'id' => 0,
+			'name' => 'Guest',
+		]));
+	}
+	foreach (['game', 'ts', 'sig'] as $param)
+	{
+		if (empty($_GET[$param]))
+		{
+			jsonError("missing required parameter: $param");
+		}
+	}
+	$startTime = intval($_GET['ts']);
+	$now = time();
+	if (abs($now * 1000 - $startTime) > 60 * 1000)
+	{
+		jsonError('timestamp is too far; possible replay attack');
+	}
+	$gameId = intval($_GET['game']);
+	$encryptionKey = $arcadeModSettings['arcadeCookieEncryptionCipher'];
+	$gameKey = hash('sha256', "$encryptionKey$gameId");
+	$signature = hash('sha256', "$gameKey;$startTime");
+	if ($signature !== $_GET['sig'])
+	{
+		jsonError('signature mismatch');
+	}
+	$_SESSION["game_start_$gameId"] = $startTime;
+	die(json_encode([
+		'id' => $user_info['id'],
+		'name' => $user_info['name'],
+	]));
+}
+
+function ArcadeSubmitNew()
+{
+	global $arcadeModSettings, $smcFunc, $user_info;
+
+	header('Content-Type: application/json');
+	if ($user_info['is_guest'])
+	{
+		jsonError('you must be logged in to submit scores');
+	}
+	foreach (['game', 'score', 'ts', 'sig'] as $param)
+	{
+		if (empty($_POST[$param]))
+		{
+			jsonError("missing required parameter: $param");
+		}
+	}
+	$score = floatval($_POST['score']);
+	if ($score < 0)
+	{
+		jsonError('score cannot be negative');
+	}
+	$endTime = intval($_POST['ts']);
+	$now = time();
+	if (abs($now * 1000 - $endTime) > 60 * 1000)
+	{
+		jsonError('timestamp is too far; possible replay attack');
+	}
+	$gameId = intval($_POST['game']);
+	if (empty($_SESSION["game_start_$gameId"]))
+	{
+		jsonError('game not started; please submit request to start game first');
+	}
+	$startTime = intval($_SESSION["game_start_$gameId"]);
+	if ($startTime > $endTime)
+	{
+		jsonError('time travel not allowed');
+	}
+	$encryptionKey = $arcadeModSettings['arcadeCookieEncryptionCipher'];
+	$gameKey = hash('sha256', "$encryptionKey$gameId");
+	$userId = $user_info['id'];
+	$signature = hash('sha256', "$gameKey;$userId;$score;$endTime");
+	if ($signature !== $_POST['sig'])
+	{
+		jsonError('signature mismatch');
+	}
+
+	$result = $smcFunc['db_query']('', '
+		SELECT g.score_type, g.id_champion_score,
+			COALESCE(s.score, 0) AS personal_best_score
+		FROM {db_prefix}arcade_games g
+		LEFT JOIN {db_prefix}arcade_scores s ON g.id_game = s.id_game
+			AND s.id_member = {int:member}
+			AND s.personal_best = 1
+		WHERE g.id_game = {int:game}
+		LIMIT 1',
+		[
+			'game' => $gameId,
+			'member' => $userId,
+		],
+	);
+	$game = $smcFunc['db_fetch_assoc']($result);
+	$smcFunc['db_free_result']($result);
+	$reverse = !empty($game['score_type']) && $game['score_type'] == 1;
+
+	// Get position
+	$result = $smcFunc['db_query']('', '
+		SELECT COUNT(*)
+		FROM {db_prefix}arcade_scores
+		WHERE score ' . ($reverse ? '<=' : '>=') . ' {float:score}
+			AND id_game = {int:game}',
+		[
+			'score' => $score,
+			'game' => $gameId,
+		],
+	);
+	[$position] = $smcFunc['db_fetch_row']($result);
+	$position++;
+	$smcFunc['db_free_result']($result);
+
+	if ($position == 1)
+		$championFrom = floor($endTime / 1000);
+	else
+		$championFrom = 0;
+
+	// Update positions
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}arcade_scores
+		SET position = position + 1
+		WHERE id_game = {int:game}
+			AND position >= {int:position}',
+		[
+			'game' => $gameId,
+			'position' => $position,
+		],
+	);
+
+	$isPersonalBest = $reverse ?
+		($game['personal_best_score'] > $score) :
+		($game['personal_best_score'] < $score);
+
+	if ($isPersonalBest)
+	{
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}arcade_scores
+			SET personal_best = 0
+			WHERE id_game = {int:game}
+				AND id_member = {int:member}',
+			[
+				'game' => $gameId,
+				'member' => $userId,
+			],
+		);
+	}
+
+	$smcFunc['db_insert']('insert',
+		'{db_prefix}arcade_scores',
+		[
+			'id_game' => 'int',
+			'id_member' => 'int',
+			'player_name' => 'string',
+			'member_ip' => 'string',
+			'score' => 'float',
+			'position' => 'int',
+			'duration' => 'float',
+			'end_time' => 'int',
+			'champion_from' => 'int',
+			'personal_best' => 'int',
+		],
+		[
+			$gameId,
+			$userId,
+			$user_info['name'],
+			$user_info['ip'],
+			$score,
+			$position,
+			($endTime - $startTime) / 1000,
+			floor($endTime / 1000),
+			intval($championFrom),
+			intval($isPersonalBest),
+		],
+		['id_game']
+	);
+	$scoreId = $smcFunc['db_insert_id']('{db_prefix}arcade_scores', 'id_score');
+
+	if ($position == 1)
+	{
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}arcade_scores
+			SET champion_to = {int:end_time}
+			WHERE id_score = {int:score}',
+			[
+				'end_time' => $championFrom,
+				'score' => $game['id_champion_score'],
+			],
+		);
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}arcade_games
+			SET id_champion = {int:member}, id_champion_score = {int:score}
+			WHERE id_game = {int:game}',
+			[
+				'member' => $userId,
+				'score' => $scoreId,
+				'game' => $gameId,
+			],
+		);
+	}
+	send_http_status(204);
+	die();
+}
+
 function ArcadeSave_Guest()
 {
 	global $scripturl, $txt, $db_prefix, $arcadeModSettings, $context, $func, $boarddir, $sourcedir, $smcFunc, $user_info;
@@ -1153,21 +1331,11 @@ function ArcadeHighscore($selfScorelist = 'highscore')
 	// Is game set
 	if (!isset($_REQUEST['game'])) {
 		arcadeClearSession();
-		/*
-		if (!empty($user_info['is_guest'])) {
-			redirectexit($scripturl . '?action=' . $action);
-		}
-		*/
 		fatal_lang_error('arcade_game_not_found', false);
 	}
 	// Get game info
 	if (!($game = getGameInfo($_REQUEST['game'], false, $rom))) {
 		arcadeClearSession();
-		/*
-		if (!empty($user_info['is_guest'])) {
-			redirectexit($scripturl . '?action=' . $action);
-		}
-		*/
 		fatal_lang_error('arcade_game_not_found', false);
 	}
 	if (!$game['highscore_support']) {
@@ -1324,7 +1492,8 @@ function ArcadeHighscore($selfScorelist = 'highscore')
 			IFNULL(mem.real_name, sc.player_name) AS real_name
 		FROM  {db_prefix}arcade_scores AS sc
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = sc.id_member)
-		WHERE sc.id_game = {int:game}' . ($selfScorelist == 'myhighscore' && !empty($user_info['is_guest']) ? ' AND sc.id_member = {int:memberid}' : '') . '
+		WHERE sc.id_game = {int:game} AND ' .
+		($selfScorelist == 'myhighscore' && !empty($user_info['is_guest']) ? 'sc.id_member = {int:memberid}' : 'sc.personal_best = 1') . '
 		ORDER BY position
 		LIMIT {int:start}, {int:scores_per_page}',
 		array(
@@ -1363,7 +1532,7 @@ function ArcadeHighscore($selfScorelist = 'highscore')
 			'member' => array(
 				'id' => $score['id_member'],
 				'name' => $score['real_name'],
-				'link' => !empty($score['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $score['id_member'] . '" class="group-' . $row['id_group'] . '">' . $score['real_name'] . '</a>' : $score['real_name'],
+				'link' => !empty($score['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $score['id_member'] . '" class="group-' . $score['id_group'] . '">' . $score['real_name'] . '</a>' : $score['real_name'],
 			),
 			'position' => $positionCount > 0 && $positionCount < 4 ? '<img style="max-width: 2.188em; max-height: 1.5em;" src="' . $settings['default_images_url'] . '/arc_icons/' . $positionCount . '.gif" alt="' . $positionCount . '" />' : $positionCount,
 			'score' => comma_format(floatval($score['score'])),
@@ -1431,7 +1600,7 @@ function ArcadeHighscore($selfScorelist = 'highscore')
 
 	// Template
 	$popScore = !empty($scoreId) ? (int)$scoreId : -1;
-	$context['arcade_empty_title_cell'] = '<div class="arcade_bottom_border" style="display: table-cell;border-bottom: 1px double;height: 1.5em;max-height: 1.5em;"><span style="display: none;">&nbsp;</span></div>';
+	$context['arcade_empty_title_cell'] = '<div class="arcade_empty_cell"><span style="display: none;">&nbsp;</span></div>';
 	$context['arcade_empty_cell'] = '<div class="minwidth" style="display: table-cell;width: 0px;height: 1.5em;max-height: 1.5em;"><span style="display: none;">&nbsp;</span></div>';
 	$context['page_title'] = sprintf($txt['arcade_view_highscore'], $game['name']);
 	$context['linktree'][] = array(
@@ -1480,12 +1649,8 @@ function ArcadeHighscore($selfScorelist = 'highscore')
 
 		// Do we show remove score functions?
 		$context['arcade']['show_editor'] = $context['arcade']['can_admin_arcade'];
-		if (empty($_SESSION['arcade_isMobilePlay']))
-			loadTemplate('ArcadeGame');
-		else
-		{
-			loadTemplate('ArcadeGameMobile');
-		}
+
+		loadTemplate('ArcadeGame');
 	}
 
 	return true;

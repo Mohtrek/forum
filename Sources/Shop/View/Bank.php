@@ -71,27 +71,44 @@ class Bank
 	{
 		global $context, $scripturl, $modSettings, $user_info, $smcFunc;
 
-        // idk how expensive hitting the database here is but its Probably fine
-        $requestDUMBIE = $smcFunc['db_query']('', '
-            SELECT interest FROM {db_prefix}interestmod
-            WHERE USER_ID = {int:user_id}',
-            array(
-                'user_id' => $user_info['id']
-            ));
-        $currentMod = $smcFunc['db_fetch_row']($requestDUMBIE);
-        $smcFunc['db_free_result']($requestDUMBIE);
+		// idk how expensive hitting the database here is but its Probably fine
+		// also check Tasks/Scheduled occasionally to make sure the formula is the same?
+		$requestDUMBIE = $smcFunc['db_query']('', '
+			SELECT COALESCE(im.interest, 0), (
+					ABS(mbr.shopBank) * (
+					{float:interest} + COALESCE(
+						im.interest,
+						0
+					)) / 100
+				)
+			FROM {db_prefix}members mbr
+			LEFT JOIN {db_prefix}interestmod im ON mbr.id_member = im.USER_ID
+			WHERE mbr.id_member = {int:user_id}',
+			array(
+				'interest' => $modSettings['Shop_bank_interest'],
+				'user_id' => $user_info['id']
+			));
+		[$currentMod, $gain] = $smcFunc['db_fetch_row']($requestDUMBIE);
+		$smcFunc['db_free_result']($requestDUMBIE);
 
-        if (empty($currentMod))
-            $currentMod = 0;
-        else
-            $currentMod = $currentMod[0];
+		if ($currentMod >= 0)
+			$currentMod = "+" . $currentMod;
+		else
+			$currentMod = strval($currentMod);
 
-        if ($currentMod >= 0)
-            $currentMod = "+" . $currentMod;
+		// getting the seconds to next midnight
+		$interStep = mktime(0, 0, 0, date('m'), date('d') + 1, date('Y')) - time();
+		$interStepString = "right FREAKING now?";
+
+		// VERY basic time diff to string converter, i dont think ppl care if its super precise or not?
+		if ($interStep > 3600)
+			$interStepString = intval($interStep / 3600) . " hour(s)";
+		else if ($interStep > 60)
+			$interStepString = intval($interStep / 60) . " minute(s)";
 
 		// Set all the page stuff
 		$context['page_title'] = Shop::getText('main_button') . ' - ' . Shop::getText('main_bank');
-		$context['page_description'] = sprintf(Shop::getText('bank_desc'), $modSettings['Shop_credits_suffix'], $modSettings['Shop_bank_interest'], $currentMod);
+		$context['page_description'] = sprintf(Shop::getText('bank_desc'), $modSettings['Shop_credits_suffix'], $modSettings['Shop_bank_interest'], $currentMod, $interStepString);
 		$context['sub_template'] = 'bank';
 		$context['linktree'][] = [
 			'url' => $scripturl . '?action=shop;sa=bank',
@@ -99,7 +116,7 @@ class Bank
 		];
 	
 		// Just a happy message... How many credits do you have and what would you like to do?
-		$context['bank']['message'] = sprintf(Shop::getText('bank_youhave'), Format::cash($user_info['shopMoney']), Format::cash($user_info['shopBank']));
+		$context['bank']['message'] = sprintf(Shop::getText('bank_youhave'), Format::cash($user_info['shopMoney']), Format::cash($user_info['shopBank']), Format::cash($gain));
 
 		// Deposit
 		if (isset($_REQUEST['deposit']))

@@ -89,12 +89,14 @@ function template_html_above()
 	loadJavaScriptFile('randChar.js', ['minimize' => true]);
 	loadJavaScriptFile('bbcode.js', ['minimize' => true]);
 	loadJavaScriptFile('goHome.js', ['minimize' => true]);
+	loadJavaScriptFile('specialTitles.js', ['minimize' => true]);
 	loadCSSFile('fonts.css', ['minimize' => true]);
 	loadCSSFile('bbcode.css', ['minimize' => true]);
 	loadCSSFile('banner.css', ['minimize' => true]);
 	loadCSSFile('tags.css', ['minimize' => true]);
 	loadCSSFile('groups.css', ['minimize' => true]);
 	loadCSSFile('randChar.css', ['minimize' => true]);
+	loadCSSFile('arcade.css', ['minimize' => true]);
 
 	// Show right to left, the language code, and the character set for ease of translating.
 	echo '<!DOCTYPE html>
@@ -139,7 +141,8 @@ function template_html_above()
 
 	echo '
 	<title>', (isset($context['is_index']) ? $context['forum_name_html_safe'] : $context['page_title_html_safe'] . ' - ' . $context['forum_name_html_safe']), '</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">';
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="/favicon.ico">';
 
 	// Content related meta tags, like description, keywords, Open Graph stuff, etc...
 	foreach ($context['meta_tags'] as $meta_tag)

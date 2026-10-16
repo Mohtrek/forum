@@ -138,6 +138,12 @@ $txt['Shop_item_using'] = 'Using the item %s';
 $txt['Shop_item_use'] = 'Usable';
 $txt['Shop_item_notusable'] = 'Not usable';
 $txt['Shop_item_used_success'] = 'The item %s was successfully used.';
+$txt['Shop_item_delete'] = 'Delete item';
+$txt['Shop_item_deleting'] = 'Deleting item %s';
+$txt['Shop_item_delete_confirm'] = 'Are you sure you want to delete the item %s? It will be gone forever (a very long time)!';
+$txt['Shop_item_delete_success'] = 'Item %s has been successfully deleted';
+$txt['Shop_item_delete_other'] = 'You cannot delete an item you do not own.';
+$txt['Shop_item_delete_notexists'] = 'The item you are trying to delete does not exist.';
 
 // Categories
 $txt['Shop_categories'] = 'Categories';
@@ -163,8 +169,8 @@ $txt['Shop_inventory_purchased'] = 'Purchased on: %s';
 
 // Bank
 $txt['Shop_bank_welcome'] = 'Welcome to the Shop Bank';
-$txt['Shop_bank_desc'] = 'Use the bank to safely store your %1$s and avoid losing them. All %1$s stored in the bank, gain or lose an interest at a rate of %2$d%3% per day. Your account has an additional interest modifier of %3$d%%';
-$txt['Shop_bank_youhave'] = 'You currently have %1$s in your pocket and %2$s in the bank.';
+$txt['Shop_bank_desc'] = 'Use the bank to safely store your %1$s and avoid losing them. All %1$s stored in the bank, gain or lose an interest at a rate of %2$d%3% per day. Your account has an additional interest modifier of %3$d%%. Interest will be collected in %4$s.';
+$txt['Shop_bank_youhave'] = 'You currently have %1$s in your pocket and %2$s in the bank. At the next interest collection, you will earn %3$s.';
 $txt['Shop_bank_action'] = 'Would you like to deposit or withdraw?';
 $txt['Shop_bank_deposit'] = 'Deposit';
 $txt['Shop_bank_withdraw'] = 'Withdraw';
@@ -272,3 +278,7 @@ $txt['Shop_who_games_lucky2'] = 'Playing <a href="'. $scripturl. '?action=shop;s
 $txt['Shop_who_games_number'] = 'Playing <a href="'. $scripturl. '?action=shop;sa=games;play=number">Number Slots</a> in the <a href="' . $scripturl . '?action=shop;sa=games">Games Room</a>';
 $txt['Shop_who_games_pairs'] = 'Playing <a href="'. $scripturl. '?action=shop;sa=games;play=pairs">Pairs</a> in the <a href="' . $scripturl . '?action=shop;sa=games">Games Room</a>';
 $txt['Shop_who_games_dice'] = 'Rolling the <a href="'. $scripturl. '?action=shop;sa=games;play=dice">Dice</a> in the <a href="' . $scripturl . '?action=shop;sa=games">Games Room</a>';
+
+// DUMBie extension: rss stuff
+$txt['Shop_xml_tradecenter_notiftitle'] = 'New item listed for sale: %s';
+$txt['Shop_xml_tradecenter_notifdesc'] = '%1$s has been listed in the trade center by %2$s for %3$d' . (!empty($modSettings['Shop_credits_suffix']) ? $modSettings['Shop_credits_suffix'] : 'Credits');

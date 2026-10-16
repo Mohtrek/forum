@@ -8,10 +8,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2023 Simple Machines and individual contributors
+ * @copyright 2026 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1.4
+ * @version 2.1.8
  */
 
 if (!defined('SMF'))
@@ -126,8 +126,14 @@ function Display()
 		$_REQUEST['start'] = 'new';
 	}
 
-	// Add 1 to the number of views of this topic (except for robots).
-	if (!$user_info['possibly_robot'] && (empty($_SESSION['last_read_topic']) || $_SESSION['last_read_topic'] != $topic))
+	// Add 1 to the number of views of this topic (except for guests/bots, per setting).
+	// no_guest_views is stricter, & won't log bots or guests.
+	if (empty($modSettings['no_guest_views']))
+		$check = !$user_info['possibly_robot'];
+	else
+		$check = !$user_info['is_guest'];
+
+	if ($check && (empty($_SESSION['last_read_topic']) || $_SESSION['last_read_topic'] != $topic))
 	{
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}topics

@@ -60,19 +60,7 @@ function ArcadeAdmin()
 		$_SESSION['arcade_deviceType'] = Detect::deviceType();
 	}
 	$context['html_headers'] .= '
-	<script src="' . $settings['default_theme_url'] . '/arcade_scripts/arcadeMobileDetect.js?' . $suffixVersion . '"></script>' . (empty($_SESSION['arcade_isMobile']) ? '
-	<link rel="stylesheet" href="' . $settings['default_theme_url'] . '/css/arcade-admin.css?' . $suffixVersion . '" />' : '
-	<link rel="stylesheet" href="' . $settings['default_theme_url'] . '/css/arcade-admin-mobile.css?' . $suffixVersion . '" />');
-
-	if (!empty($_SESSION['arcade_isMobile']) && $context['arcade_smf_version'] !== 'v2.1')
-		$context['html_headers'] .= '
-	<meta name="viewport" content="width=device-width, maximum-scale=1.0">';
-
-	/*
-	if (!empty($_SESSION['arcade_isMobile']))
-		$context['html_headers'] .= '
-	<link rel="stylesheet" href="' . $settings['default_theme_url'] . '/css/arcade-mobile.css?' . $suffixVersion . '" />';
-	*/
+	<link rel="stylesheet" href="' . $settings['default_theme_url'] . '/css/arcade-admin.css?' . $suffixVersion . '" />';
 
 	if (isset($subActions[$_REQUEST['sa']][1]))
 		isAllowedTo($subActions[$_REQUEST['sa']][1]);
@@ -139,15 +127,13 @@ function ArcadeAdminDiscernibleSettings($return_config = false)
 	$arcadeModSettings['arcadeGamesNameLength'] = !empty($arcadeModSettings['arcadeGamesNameLength']) ? $arcadeModSettings['arcadeGamesNameLength'] : 100;
 	$arcadeModSettings['arcadeGamesNameLengthA'] = !empty($arcadeModSettings['arcadeGamesNameLengthA']) ? $arcadeModSettings['arcadeGamesNameLengthA'] : 100;
 	$arcadeModSettings['arcadeGamesNameLengthB'] = !empty($arcadeModSettings['arcadeGamesNameLengthB']) ? $arcadeModSettings['arcadeGamesNameLengthB'] : 100;
-	list($custom_skin_vars, $customMobileLists, $customMobileSkins, $customArcadeSkins, $customArcadeLists, $customSkins, $customLists, $mobileSkins, $mobileLists, $checkRar) = array(array(), array(), array(), array(), array(), array(), array(), array(), array(), false);
+	list($custom_skin_vars, $customArcadeSkins, $customArcadeLists, $customSkins, $customLists, $checkRar) = array(array(), array(), array(), array(), array(), array(), false);
 	$php_OS = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? $txt['arcadeShowOS'][1] : $txt['arcadeShowOS'][0];
 	$arcadeRarText = ("<div style=\"display: inline;\" id=\"rarIndex\">" . sprintf($txt['arcadeDownloadRarNotDetected'], $php_OS) . "</div>");
 	$customArcadeSkins = Arcade_integrate_skins('desktop', true, 0);
 	$customArcadeLists = Arcade_integrate_lists('desktop', true, 0);
-	$customMobileLists = Arcade_integrate_lists('mobile', true, 0);
-	$customMobileSkins = Arcade_integrate_skins('mobile', true, 0);
-	list($skinConfigs, $listConfigs, $mobileSkinConfigs, $mobileListConfigs, $skin_settings) = array(array(), array(), array(), array(), array());
-	list($customSkins, $mobileSkins, $customLists, $mobileLists, $custom_settings) = array(array(), array(), array(), array(), array());
+	list($skinConfigs, $listConfigs, $skin_settings) = array(array(), array(), array());
+	list($customSkins, $customLists, $custom_settings) = array(array(), array(), array());
 
 	foreach($customArcadeSkins as $skin)
 	{
@@ -161,20 +147,6 @@ function ArcadeAdminDiscernibleSettings($return_config = false)
 					$skinConfigs[$skin['id_skin']]['admin_vars'] = $skin['admin_function']();
 			}
 			$customSkins[$skin['id_skin']] = !empty($txt[$skin['skin_name']]) ? $txt[$skin['skin_name']] : $skin['skin_name'];
-		}
-	}
-	foreach($customMobileSkins as $skin)
-	{
-		if (!empty($skin['id_skin']) && $skin['id_skin'] > 2) {
-			if (!empty($skin['skin_source_file']) && file_exists($boarddir . '/ArcadeSources/' . $skin['skin_source_file'])) {
-				require_once($boarddir . '/ArcadeSources/' . $skin['skin_source_file']);
-				if (!empty($skin['lang_function']) && function_exists($skin['lang_function'])) {
-					$skin['lang_function']();
-				}
-				if (!empty($skin['admin_function']) && function_exists($skin['admin_function']))
-					$mobileSkinConfigs[$skin['id_skin']]['admin_vars'] = $skin['admin_function']();
-			}
-			$mobileSkins[$skin['id_skin']] = !empty($txt[$skin['skin_name']]) ? $txt[$skin['skin_name']] : $skin['skin_name'];
 		}
 	}
 	foreach($customArcadeLists as $list)
@@ -191,20 +163,6 @@ function ArcadeAdminDiscernibleSettings($return_config = false)
 			$customLists[$list['id_list']] = !empty($txt[$list['list_name']]) ? $txt[$list['list_name']] : $list['list_name'];
 		}
 
-	}
-	foreach($customMobileLists as $list)
-	{
-		if (!empty($list['id_list']) && $list['id_list'] > 2) {
-			if (!empty($list['list_source_file']) && file_exists($boarddir . '/ArcadeSources/' . $list['list_source_file'])) {
-				require_once($boarddir . '/ArcadeSources/' . $list['list_source_file']);
-				if (!empty($list['lang_function']) && function_exists($list['lang_function'])) {
-					$list['lang_function']();
-				}
-				if (!empty($list['admin_function']) && function_exists($list['admin_function']))
-					$mobileListConfigs[$list['id_skin']]['admin_vars'] = $list['admin_function']();
-			}
-			$mobileLists[$list['id_list']] = !empty($txt[$list['list_name']]) ? $txt[$list['list_name']] : $list['list_name'];
-		}
 	}
 
 	$discernible_settings = array(
@@ -358,12 +316,6 @@ function ArcadeAdminDiscernibleSettings($return_config = false)
 		'',
 			array('message', 'arcade_title_mobile_settings'),
 		'',
-			array('select', 'arcadeSkinMobile',
-				array_merge(array($txt['arcade_skin_mobile_generic'], $txt['arcade_skin_mobile0']), $mobileSkins)
-			),
-			array('select', 'arcadeListMobile',
-				array_merge(array($txt['arcade_list_mobile_generic'], $txt['arcade_list_mobile0']), $mobileLists)
-			),
 	);
 
 	$list_select = array(
@@ -386,9 +338,7 @@ function ArcadeAdminDiscernibleSettings($return_config = false)
 		'',
 	);
 
-	// add possible custom mobile & regular skin/list admin settings
-	$custom_settings = !empty($mobileSkinConfigs) ? array_merge($custom_settings, array(''), $mobileSkinConfigs) : $custom_settings;
-	$custom_settings = !empty($mobileListConfigs) ? array_merge($custom_settings, array(''), $mobileListConfigs) : $custom_settings;
+	// add possible custom regular skin/list admin settings
 	$custom_settings = !empty($listConfigs) ? array_merge($custom_settings, array(''), $listConfigs) : $custom_settings;
 	$custom_settings = !empty($skinConfigs) ? array_merge($custom_settings, array(''), $skinConfigs) : $custom_settings;
 	$custom_settings = array_merge($custom_settings, $skin_select);
@@ -676,7 +626,6 @@ function ArcadeAdminDiscernibleSettings($return_config = false)
 					}
 				});
 			}
-			$("#arcadeListMobile, #arcadeSkinMobile").css({"min-width":"50%"});
 			arcadeListenSettings();
 			arcadeShoutboxSettings();' . (!empty($arcadeModSettings['arcade_log_emulatorjs_console']) ? '
 			arcadeConsoleDebugMode();' : '') . '
@@ -1458,9 +1407,8 @@ function ArcadeAdminPermission($return_config = false)
 				}
 			});
 		});
-	</script>' . (empty($_SESSION['arcade_isMobile']) ? '
-	<link rel="stylesheet" href="' . $settings['default_theme_url'] . '/css/arcade-admin.css?' . $suffixVersion . '" />' : '
-	<link rel="stylesheet" href="' . $settings['default_theme_url'] . '/css/arcade-admin-mobile.css?' . $suffixVersion . '" />');
+	</script>
+	<link rel="stylesheet" href="' . $settings['default_theme_url'] . '/css/arcade-admin.css?' . $suffixVersion . '" />';
 	arcadePrepareDBSettingContext($config_vars);
 }
 
@@ -1499,9 +1447,7 @@ function ArcadeAdminCategory()
 				}
 			});
 		});
-	</script>' . (empty($_SESSION['arcade_isMobile']) ? '
-	<link rel="stylesheet" href="' . $settings['default_theme_url'] . '/css/arcade-admin.css?' . $suffixVersion . '" />' : '
-	<link rel="stylesheet" href="' . $settings['default_theme_url'] . '/css/arcade-admin-mobile.css?' . $suffixVersion . '" />');
+	</script>';
 
 	$subActions = array(
 		'list' => array('ArcadeCategoryList', 'arcade_admin'),
@@ -1848,9 +1794,7 @@ function ArcadePdlReports($return_config = false)
 				}
 			});
 		});
-	</script>' . (empty($_SESSION['arcade_isMobile']) ? '
-	<link rel="stylesheet" href="' . $settings['default_theme_url'] . '/css/arcade-admin.css?' . $suffixVersion . '" />' : '
-	<link rel="stylesheet" href="' . $settings['default_theme_url'] . '/css/arcade-admin-mobile.css?' . $suffixVersion . '" />');
+	</script>';
 
 	loadTemplate('ArcadeReports');
 	return;

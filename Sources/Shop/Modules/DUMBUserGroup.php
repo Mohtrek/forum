@@ -45,7 +45,7 @@ class DUMBUsergroup extends Module
     {
 		// Get the forum groups, except admin/mod
 		$groups = Database::Get(0, 1000, 'm.group_name', 'membergroups AS m', ['m.id_group', 'm.group_name'], 'WHERE m.min_posts = -1 AND m.id_group <> 1 AND m.id_group <> 3');
-        $select = '';
+        $select = '<option value="0">Unassign group</option>';
 
 		// For some reason you are using this module, but have not groups whatsoever
 		if (empty($groups))
@@ -90,24 +90,13 @@ class DUMBUsergroup extends Module
         // to refund any items
 
         if ($user_info['groups'][0] > 0) {
-
-            // sql garbage spam lol
-            // this is supposed to get the id of the item that gives the current title
-            // its checking the info1 field is the same as the current group
-            // and the module is the same as the currently used item
             $requestDUMBIE = $smcFunc['db_query']('', '
-                WITH full_data AS (
-                    SELECT id, itm.itemid, module, info1
-                    FROM {db_prefix}stshop_inventory inv
-                    INNER JOIN {db_prefix}stshop_items itm
-                    ON itm.itemid = inv.itemid
-                ) SELECT DISTINCT itemid FROM full_data
+                SELECT itemid FROM {db_prefix}stshop_items
                 WHERE info1 = (SELECT id_group FROM {db_prefix}members WHERE id_member = {int:user_id})
-                AND module = (SELECT module FROM full_data WHERE id = {int:itemcopy_id})',
-                array(
-                    'user_id' => $user_info['id'],
-                    'itemcopy_id' => $_REQUEST['id']
-                ));
+                AND module = (SELECT id FROM {db_prefix}stshop_modules WHERE file = "DUMBUserGroup")
+                ',
+                ['user_id' => $user_info['id']]
+            );
 
             $title_item = $smcFunc['db_fetch_row']($requestDUMBIE);
             $smcFunc['db_free_result']($requestDUMBIE);
@@ -146,7 +135,13 @@ class DUMBUsergroup extends Module
         // overriding the existing primary group
         // dear god i really hope this doesnt break somehow
         // and deadmin someon
-		addMembersToGroup($user_info['id'], $this->item_info[1], 'force_primary', true);
+        if ($this->item_info[1] > 0)
+            addMembersToGroup($user_info['id'], $this->item_info[1], 'force_primary', true);
+        else
+            removeMembersFromGroups($user_info['id'], null, true);
+        // hopefully this doesnt break anything in the future??
+        // on the other hand idk how mad smf would get about having a member
+        // with no primary mgroup but also having subgroups
 
 
 		// Display message box

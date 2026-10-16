@@ -8,13 +8,24 @@
 	--bbc-pink: pink;
 }
 
-body.color-scheme-light, body.color-scheme-os {
+body.color-scheme-light {
 	--bbc-orange: #ff6c00;
 	--bbc-yellow: #f6b517;
 	--bbc-cyan: #00cece;
 	--bbc-blue: blue;
 	--bbc-purple: purple;
 	--bbc-pink: #ff758e;
+}
+
+@media (prefers-color-scheme: light) {
+	body.color-scheme-os {
+		--bbc-orange: #ff6c00;
+		--bbc-yellow: #f6b517;
+		--bbc-cyan: #00cece;
+		--bbc-blue: blue;
+		--bbc-purple: purple;
+		--bbc-pink: #ff758e;
+	}
 }
 
 /* Color remapping */
@@ -137,6 +148,13 @@ span[style="color: pink;"] {
 	max-width: 100%;
 }
 
+/* [video] styles */
+.video video {
+	max-height: 500px;
+	max-width: min(100%, 800px);
+	width: auto;
+}
+
 .spoilertxt:not(:hover),
 .spoilertxt:not(:hover) *,
 .spoilertxt:not(:hover) a { 
@@ -209,6 +227,7 @@ span[style="color: pink;"] {
     border-bottom: 1px var(--border-color) solid;
     background-color: var(--sec-bg-color);
     padding: 2px;
+	overflow: auto;
 }
 
 blockquote[style="overflow-y: hidden; max-height: 300px;"] {
@@ -231,6 +250,10 @@ blockquote[style="overflow-y: hidden; max-height: 300px;"] a.expand {
 	text-align: center;
 	width: 100%;
 	z-index: 1;
+}
+
+blockquote[style="overflow-y: hidden; max-height: 300px;"] blockquote blockquote div {
+	display: none;
 }
 
 blockquote.bbc_standard_quote blockquote a.expand {
@@ -268,4 +291,13 @@ blockquote.bbc_standard_quote blockquote {
 /* Smooth image rendering for large images */
 .smooth, .smooth * {
 	image-rendering: auto;
+}
+
+/* [dicerolled] */
+.dicerolled {
+	background-color: var(--ter-color);
+	border: 1px dashed var(--border-color);
+	color: var(--accent-label-color-ter);
+	margin: 5px 20px;
+	padding: 6px;
 }

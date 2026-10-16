@@ -9,10 +9,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2025 Simple Machines and individual contributors
+ * @copyright 2026 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1.5
+ * @version 2.1.8
  */
 
 if (!defined('SMF'))
@@ -115,16 +115,13 @@ function preparsecode(&$message, $previewing = false)
 		$message = '[code]' . $message;
 
 	// Replace code BBC with placeholders. We'll restore them at the end.
-	$parts = preg_split('~(\[/code\]|\[code(?:=[^\]]+)?\])~i', $message, -1, PREG_SPLIT_DELIM_CAPTURE);
-	for ($i = 0, $n = count($parts); $i < $n; $i++)
-	{
-		// It goes 0 = outside, 1 = begin tag, 2 = inside, 3 = close tag, repeat.
-		if ($i % 4 == 2)
-		{
-			$code_tag = $parts[$i - 1] . $parts[$i] . $parts[$i + 1];
-			$substitute = $parts[$i - 1] . $i . $parts[$i + 1];
-			$code_tags[$substitute] = $code_tag;
-			$parts[$i] = $i;
+	$parts = preg_split('/(\[code(?:=[^\]]+)?\](?:[^\[]|\[(?!\/code\])|(?R))*\[\/code])/i', $message, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+	for ($i = 0, $n = \count($parts); $i < $n; $i++) {
+		if ($i % 2 == 1) {
+			$substitute = md5($parts[$i]);
+			$code_tags[$substitute] = $parts[$i];
+			$parts[$i] = $substitute;
 		}
 	}
 
@@ -310,18 +307,14 @@ function un_preparsecode($message)
 	// Any hooks want to work here?
 	call_integration_hook('integrate_unpreparsecode', array(&$message));
 
-	$parts = preg_split('~(\[/code\]|\[code(?:=[^\]]+)?\])~i', $message, -1, PREG_SPLIT_DELIM_CAPTURE);
-
 	// We're going to unparse only the stuff outside [code]...
-	for ($i = 0, $n = count($parts); $i < $n; $i++)
-	{
-		// If $i is a multiple of four (0, 4, 8, ...) then it's not a code section...
-		if ($i % 4 == 2)
-		{
-			$code_tag = $parts[$i - 1] . $parts[$i] . $parts[$i + 1];
-			$substitute = $parts[$i - 1] . $i . $parts[$i + 1];
-			$code_tags[$substitute] = $code_tag;
-			$parts[$i] = $i;
+	$parts = preg_split('/(\[code(?:=[^\]]+)?\](?:[^\[]|\[(?!\/code\])|(?R))*\[\/code])/i', $message, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+	for ($i = 0, $n = \count($parts); $i < $n; $i++) {
+		if ($i % 2 == 1) {
+			$substitute = md5($parts[$i]);
+			$code_tags[$substitute] = $parts[$i];
+			$parts[$i] = $substitute;
 		}
 	}
 
@@ -478,8 +471,11 @@ function fixTag(&$message, $myTag, $protocols, $embeddedUrl = false, $hasEqualSi
 
 	if ($hasEqualSign && $embeddedUrl)
 	{
-		$quoted = preg_match('~\[(' . $myTag . ')=&quot;~', $message);
-		preg_match_all('~\[(' . $myTag . ')=' . ($quoted ? '&quot;(.*?)&quot;' : '([^\]]*?)') . '\](?:(.+?)\[/(' . $myTag . ')\])?~is', $message, $matches);
+		preg_match_all('~\[(' . $myTag . ')=(&quot;(?:[^&]|&(?!quot;))*?&quot;|[^\]]*?)\](?:(.+?)\[/(' . $myTag . ')\])?~is', $message, $matches);
+
+		foreach ($matches[2] as $key => $match) {
+			$matches[2][$key] = preg_replace('/^&quot;|&quot;$/', '', $match);
+		}
 	}
 	elseif ($hasEqualSign)
 		preg_match_all('~\[(' . $myTag . ')=([^\]]*?)\](?:(.+?)\[/(' . $myTag . ')\])?~is', $message, $matches);
@@ -494,9 +490,6 @@ function fixTag(&$message, $myTag, $protocols, $embeddedUrl = false, $hasEqualSi
 		$this_close = $hasEqualSign ? (empty($matches[4][$k]) ? '' : $matches[4][$k]) : $matches[3][$k];
 
 		$found = false;
-
-		if (preg_match('/^&quot;(.*?)&quot;$/', $replace, $m) != 0)
-			$replace = $m[1];
 
 		foreach ($protocols as $protocol)
 		{
@@ -1536,7 +1529,7 @@ function smtp_mail($mail_to_array, $subject, $message, $headers)
 			return false;
 		if (!server_parse('DATA', $socket, '354'))
 			return false;
-		fputs($socket, 'Subject: ' . $subject . "\r\n");
+		fputs($socket, 'Subject: ' . strtr($subject, ["\r" => '', "\n" => '']) . "\r\n");
 		if (strlen($mail_to) > 0)
 			fputs($socket, 'To: <' . $mail_to . '>' . "\r\n");
 		fputs($socket, $headers . "\r\n\r\n");
