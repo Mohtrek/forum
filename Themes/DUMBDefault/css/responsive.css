@@ -215,6 +215,10 @@
 		width: auto;
 		max-width: initial;
 	}
+	#inner_wrap .user {
+		display: flex;
+		flex-flow: row wrap;
+	}
 	#languages_form {
 		padding-right: 10px;
 	}
@@ -372,6 +376,19 @@
 	}
 
 	/* Display (Topics) */
+	#display_head {
+		display: flex;
+		flex-flow: column wrap;
+		word-wrap: break-word;
+		overflow-wrap: anywhere;
+	}
+	#display_head p {
+		margin-bottom: 1em;
+	}
+	#display_head span {
+		text-align: center;
+	}
+
 	.poster {
 		display: grid;
 		grid-auto-flow: row dense;
@@ -865,9 +882,6 @@
 	th.recentboard, th.recenttime,
 	td.recentboard, td.recenttime {
 		display: none;
-	}
-	.sceditor-container {
-		min-height: 375px;
 	}
 
 	/* Memberlist */

@@ -2343,7 +2343,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'tag' => 'size',
 				'type' => 'unparsed_equals',
 				'test' => '([1-9][\d]?p[xt]|small(?:er)?|large[r]?|x[x]?-(?:small|large)|medium|(0\.[1-9]|[1-9](\.[\d][\d]?)?)?em)\]',
-				'before' => '<span style="font-size: $1;" class="bbc_size">',
+				'before' => '<span style="font-size: max(min($1, 99px), 8px);" class="bbc_size">',
 				'after' => '</span>',
 			),
 			array(
@@ -2354,8 +2354,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'after' => '</span>',
 				'validate' => function(&$tag, &$data, $disabled)
 				{
-					$sizes = array(1 => 0.7, 2 => 1.0, 3 => 1.35, 4 => 1.45, 5 => 2.0, 6 => 2.65, 7 => 3.95);
-					$data = $sizes[$data] . 'em';
+					$sizes = array(1 => 0.5, 2 => 0.8, 3 => 1.1, 4 => 1.4, 5 => 1.8, 6 => 2.3, 7 => 2.8);
+					$data = $sizes[$data] . 'rem';
 				},
 			),
 			array(
@@ -2470,6 +2470,13 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'disabled_content' => '<a href="https://www.youtube.com/watch?v=$1&t={start}" target="_blank" rel="noopener">https://www.youtube.com/watch?v=$1&t={start}</a>',
 				'block_level' => true,
 			),
+			[
+				'tag' => 'title',
+				'type' => 'unparsed_equals',
+				'test' => '(\d+)\]',
+				'before' => '<span class="group-$1">',
+				'after' => '</span>',
+			],
 		);
 
 		// Inside these tags autolink is not recommendable.
@@ -4454,6 +4461,7 @@ function setupThemeContext($forceload = false)
 		addInlineCss('
 	img.avatar { max-width: ' . $modSettings['avatar_max_width_external'] . 'px !important; max-height: ' . $modSettings['avatar_max_height_external'] . 'px !important; }');
 
+	/* DUMB change: we do this in bbcode.css
 	// Add max image limits
 	if (!empty($modSettings['max_image_width']))
 		addInlineCss('
@@ -4462,6 +4470,7 @@ function setupThemeContext($forceload = false)
 	if (!empty($modSettings['max_image_height']))
 		addInlineCss('
 	.postarea .bbc_img, .list_posts .bbc_img, .post .inner .bbc_img, form#reported_posts .bbc_img, #preview_body .bbc_img { max-height: ' . $modSettings['max_image_height'] . 'px; }');
+	*/
 
 	// This looks weird, but it's because BoardIndex.php references the variable.
 	$context['common_stats']['latest_member'] = array(
@@ -8701,6 +8710,7 @@ const CANONICAL_TAGS = [
 	'ama',
 	'trading',
 	'shop',
+	'blog',
 
 	// Roleplay
 	'deltarune',

@@ -759,6 +759,11 @@ censorText($row['first_subject']);
 			),
 		);
 
+	$context['normal_buttons']['rss_feed'] = [
+		'text' => 'rss_feed',
+		'url' => "$scripturl?action=.xml;type=atom;sa=news;limit=50;board=$board",
+	];
+
 	// Javascript for inline editing.
 	loadJavaScriptFile('topic.js', array('defer' => false, 'minimize' => true), 'smf_topic');
 

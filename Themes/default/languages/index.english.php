@@ -340,6 +340,7 @@ $txt['your_ban_expires_never'] = 'This ban is not set to expire.';
 $txt['ban_continue_browse'] = 'You may continue to browse the forum as a guest.';
 
 $txt['mark_as_read'] = 'Mark ALL messages as read';
+$txt['rss_feed'] = 'RSS Feed';
 
 $txt['locked_topic'] = 'Locked Topic';
 $txt['normal_topic'] = 'Normal Topic';
@@ -688,6 +689,7 @@ $txt['unread_topics_visit_none'] = 'No unread topics found since your last visit
 $txt['updated_topics_visit_none'] = 'No updated topics found since your last visit.';
 $txt['unread_topics_all'] = 'All Unread Topics';
 $txt['unread_replies'] = 'Updated Topics';
+$txt["dumb_event_tab"] = 'Current Event';
 
 $txt['who_title'] = 'Who\'s Online';
 $txt['who_and'] = ' and ';
